@@ -25,8 +25,22 @@
 <li><a href="#encrypting-data-files-code-coming-in-v2-0-code">3.10. Encrypting data files <code>[coming in v2.0]</code></a></li>
 </ul>
 </li>
-<li><a href="#faq">4. FAQ</a></li>
-<li><a href="#command-summary">5. Command Summary</a></li>
+<li><a href="#advanced-features">4. Advanced Features</a>
+<ul class="sectlevel2">
+<li><a href="#add-schedule-code-add-schedule-code">4.1. Add Schedule: <code>add-schedule</code></a></li>
+<li><a href="#delete-schedule-code-delete-schedule-code">4.2. Delete schedule: <code>delete-schedule</code></a></li>
+<li><a href="#edit-person-s-details-code-edit-person-code">4.3. Edit person’s details: <code>edit-person</code></a></li>
+<li><a href="#group-friends-code-group-code">4.4. Group friends: <code>group</code></a></li>
+<li><a href="#show-group-code-show-group-code">4.5. Show group: <code>show-group</code></a></li>
+<li><a href="#delete-group-code-delete-group-code">4.6. Delete group: <code>delete-group</code></a></li>
+<li><a href="#show-person-code-show-person-code">4.7. Show person: <code>show-person</code></a></li>
+<li><a href="#export-vr-virtual-representation-code-export-vr-code">4.8. Export VR(Virtual Representation): <code>export-vr</code></a></li>
+<li><a href="#export-ics-code-export-ics-code">4.9. Export ICS: <code>export-ics</code></a></li>
+<li><a href="#import-ics-code-import-ics-code">4.10. Import ICS: <code>import-ics</code></a></li>
+</ul>
+</li>
+<li><a href="#faq">5. FAQ</a></li>
+<li><a href="#command-summary">6. Command Summary</a></li>
 </ul>
 </div>
 </div>
@@ -126,19 +140,7 @@ e.g. typing <strong><code>help</code></strong> and pressing <kbd>Enter</kbd> wil
 <h3 id="adding-a-person-code-add-code"><a class="link" href="#adding-a-person-code-add-code">3.2. Adding a person: <code>add</code></a></h3>
 <div class="paragraph">
 <p>Adds a person to the address book<br>
-Format: <code>add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]&#8230;&#8203;</code></p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-A person can have any number of tags (including 0)
-</td>
-</tr>
-</table>
+Format: <code>add-person -n NAME -e EMAIL [-c NUS_MOD_LINK]</code></p>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -146,10 +148,10 @@ A person can have any number of tags (including 0)
 <div class="ulist">
 <ul>
 <li>
-<p><code>add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01</code></p>
+<p><code>add-person -n Catherine -e <a href="mailto:catherineCanCook@imail.com">catherineCanCook@imail.com</a></code></p>
 </li>
 <li>
-<p><code>add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal</code></p>
+<p><code>add-person -n John Doe -e <a href="mailto:JohnDoe@imail.com">JohnDoe@imail.com</a> -c 23F6B742CE</code></p>
 </li>
 </ul>
 </div>
@@ -255,7 +257,7 @@ Returns any person having names <code>Betsy</code>, <code>Tim</code>, or <code>J
 <h3 id="deleting-a-person-code-delete-code"><a class="link" href="#deleting-a-person-code-delete-code">3.6. Deleting a person : <code>delete</code></a></h3>
 <div class="paragraph">
 <p>Deletes the specified person from the address book.<br>
-Format: <code>delete INDEX</code></p>
+Format: <code>delete-person -n NAME</code></p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -280,14 +282,8 @@ Format: <code>delete INDEX</code></p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>list</code><br>
-<code>delete 2</code><br>
+<p><code>delete-person -n Benedict</code><br>
 Deletes the 2nd person in the address book.</p>
-</li>
-<li>
-<p><code>find Betsy</code><br>
-<code>delete 1</code><br>
-Deletes the 1st person in the results of the <code>find</code> command.</p>
 </li>
 </ul>
 </div>
@@ -322,7 +318,283 @@ There is no need to save manually.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="faq"><a class="link" href="#faq">4. FAQ</a></h2>
+<h2 id="advanced-features"><a class="link" href="#advanced-features">4. Advanced Features</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="add-schedule-code-add-schedule-code"><a class="link" href="#add-schedule-code-add-schedule-code">4.1. Add Schedule: <code>add-schedule</code></a></h3>
+<div class="paragraph">
+<p>Adds a schedule to a person in TimeBook
+Can be used to mark a person as unavailable either on one-off dates or on a particular day every week<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>add-schedule -n NAME -d DATE -t TIME</code><br></p>
+</li>
+<li>
+<p><code>add-schedule -n NAME -d DAY -t TIME</code><br></p>
+</li>
+<li>
+<p><code>add-schedule -n NAME -c NUS_MOD_LINK</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>add-schedule -n John -d 18/09/2019 -t 1000</code></p>
+</li>
+<li>
+<p><code>add-schedule -n John -d Wednesday -t 1000</code></p>
+</li>
+<li>
+<p><code>add-schedule -n Jake -c 23F6B742CE</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="delete-schedule-code-delete-schedule-code"><a class="link" href="#delete-schedule-code-delete-schedule-code">4.2. Delete schedule: <code>delete-schedule</code></a></h3>
+<div class="paragraph">
+<p>Delete all schedule data of the specified person from TimeBook<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>delete-schedule -n NAME</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>delete-schedule -n John</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="edit-person-s-details-code-edit-person-code"><a class="link" href="#edit-person-s-details-code-edit-person-code">4.3. Edit person’s details: <code>edit-person</code></a></h3>
+<div class="paragraph">
+<p>Edits a person’s details by overwriting in TimeBook<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>edit-person -n NAME [-e EMAIL_ADDRESS] [-c NUS_MOD_LINK]</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>edit-person -n John -e <a href="mailto:JDoe@imail.com">JDoe@imail.com</a></code></p>
+</li>
+<li>
+<p><code>edit-person -n Jake -c 23F6B742CE -e <a href="mailto:contact@jake.com">contact@jake.com</a></code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="group-friends-code-group-code"><a class="link" href="#group-friends-code-group-code">4.4. Group friends: <code>group</code></a></h3>
+<div class="paragraph">
+<p>Adds members into a group and creates the group if it doesn’t already exist<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>group -g GROUP_NAME [-m NAME]&#8230;&#8203;</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>group -g TimeBook -m Catherine -m John Doe</code></p>
+</li>
+<li>
+<p><code>group -g CS2030 T2 -m Amanda -m Catherine</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="show-group-code-show-group-code"><a class="link" href="#show-group-code-show-group-code">4.5. Show group: <code>show-group</code></a></h3>
+<div class="paragraph">
+<p>Shows details of a group: who are its members and their available timings<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>show-group -g TimeBook</code><br></p>
+</li>
+<li>
+<p><code>show-group -g CS2030 T2</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>group -g TimeBook -m Catherine -m John Doe</code></p>
+</li>
+<li>
+<p><code>group -g CS2030 T2 -m Amanda -m Catherine</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="delete-group-code-delete-group-code"><a class="link" href="#delete-group-code-delete-group-code">4.6. Delete group: <code>delete-group</code></a></h3>
+<div class="paragraph">
+<p>Adds members into a group and creates the group if it doesn’t already exist<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>delete-group -g GROUP_NAME</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>delete-group -g CS2030 T2</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="show-person-code-show-person-code"><a class="link" href="#show-person-code-show-person-code">4.7. Show person: <code>show-person</code></a></h3>
+<div class="paragraph">
+<p>Shows a person’s details along with their schedule<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>show-person -n NAME</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>show-person -n Catherine</code></p>
+</li>
+<li>
+<p><code>show-person -n Jake</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="export-vr-virtual-representation-code-export-vr-code"><a class="link" href="#export-vr-virtual-representation-code-export-vr-code">4.8. Export VR(Virtual Representation): <code>export-vr</code></a></h3>
+<div class="paragraph">
+<p>Exports a visualisation representation of the schedule (timetable) of a group or person(s)<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>export-vr [-n NAME]… [-g GROUP_NAME]… -o OUTPUT_FILE</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>export-vr -g TimeBook -o timetable.jpg</code></p>
+</li>
+<li>
+<p><code>export-vr -n John Doe -n Joe Dohn -n Jackie Chan -o timetable.jpg</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="export-ics-code-export-ics-code"><a class="link" href="#export-ics-code-export-ics-code">4.9. Export ICS: <code>export-ics</code></a></h3>
+<div class="paragraph">
+<p>Output the free time for a certain group as an ics file. This ics file could be imported into google calendar.<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>export-ics OUTPUT_FILENAME</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Export-ics -n CS3230T</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="import-ics-code-import-ics-code"><a class="link" href="#import-ics-code-import-ics-code">4.10. Import ICS: <code>import-ics</code></a></h3>
+<div class="paragraph">
+<p>Import the ics file of an individual.<br>
+Format:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>import-ics NAME FILEPATH</code><br></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Import-ics -t individual -n Catherine -p /data/timetable.ics</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="faq"><a class="link" href="#faq">5. FAQ</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Q</strong>: How do I transfer my data to another Computer?<br>
@@ -331,7 +603,7 @@ There is no need to save manually.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="command-summary"><a class="link" href="#command-summary">5. Command Summary</a></h2>
+<h2 id="command-summary"><a class="link" href="#command-summary">6. Command Summary</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -363,4 +635,4 @@ e.g. <code>find James Jake</code></p>
 </ul>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2019-10-01 13:43:52 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2019-10-01 14:28:26 UTC</div></div></div></body></html>
