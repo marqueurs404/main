@@ -34,7 +34,7 @@ public class NusModsData {
         return acadCalendar;
     }
 
-    public void addDetailedModule(Module module) {
+    public void addModule(Module module) {
         moduleList.addModule(module);
     }
 
