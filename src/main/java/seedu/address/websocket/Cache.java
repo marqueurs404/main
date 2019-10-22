@@ -26,6 +26,8 @@ import seedu.address.model.module.Holidays;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleId;
 import seedu.address.model.module.ModuleList;
+import seedu.address.model.module.ModuleSummary;
+import seedu.address.model.module.ModuleSummaryList;
 
 /**
  * Cache class handles whether to get external data from storage data or api.
@@ -35,7 +37,8 @@ public class Cache {
 
     private static final String JSON_EXTENSION = ".json";
 
-    private static Path folderPath;
+    private static Path folderPath = Path.of(CacheFileNames.CACHE_FOLDER_PATH);
+    
     private static NusModsApi api = new NusModsApi(AppSettings.DEFAULT_ACAD_YEAR);
 
 
@@ -182,8 +185,35 @@ public class Cache {
     }
 
     /**
+     * Load ModuleSummaryList from cache, if failed, return empty.
+     * @return an Optional containing a ModuleSummaryList object or empty.
+     */
+    public static Optional<ModuleSummaryList> loadModuleSummaryList() {
+        Optional<Object> objOptional = load(CacheFileNames.MODULES_SUMMARY);
+        ModuleSummaryList moduleSummaryList = new ModuleSummaryList();
+
+        JSONObject modulesSummariesJson = new JSONObject();
+        if (objOptional.isPresent()) {
+            JSONObject moduleSummariesJson = (JSONObject) objOptional.get();
+            JSONArray moduleSummariesSingleYear = (JSONArray) moduleSummariesJson.get(api.getAcadYear().toString());
+            return Optional.of(NusModsParser.parseModuleSummaryList(moduleSummariesSingleYear, api.getAcadYear()));
+        }
+
+        logger.info("Module summaries not found in cache, getting from API...");
+        Optional<JSONArray> arrOptional = api.getModuleList();
+        if (arrOptional.isPresent()) {
+            modulesSummariesJson.put(api.getAcadYear(), arrOptional.get());
+            save(modulesSummariesJson, CacheFileNames.MODULES_SUMMARY);
+            return Optional.of(NusModsParser.parseModuleSummaryList(arrOptional.get(), api.getAcadYear()));
+        }
+
+        logger.severe("Failed to module summaries from API!");
+        return Optional.empty();
+    }
+
+    /**
      * Load modulelist from cache, if failed, return empty.
-     * @return an Optional containing a Module object or empty.
+     * @return an Optional containing a ModuleList object or empty.
      */
     public static Optional<ModuleList> loadModuleList() {
         Optional<Object> objOptional = load(CacheFileNames.MODULES);

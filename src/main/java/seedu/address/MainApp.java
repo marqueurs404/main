@@ -26,7 +26,7 @@ import seedu.address.model.TimeBook;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.Holidays;
-import seedu.address.model.module.ModuleList;
+import seedu.address.model.module.ModuleSummaryList;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
@@ -68,8 +68,6 @@ public class MainApp extends Application {
         AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
         TimeBookStorage timeBookStorage = new JsonTimeBookStorage(userPrefs.getTimeBookFilePath());
         storage = new StorageManager(addressBookStorage, userPrefsStorage, timeBookStorage);
-
-        Cache.setFolderPath(userPrefs.getCacheFolderPath());
 
         initLogging(config);
 
@@ -132,9 +130,9 @@ public class MainApp extends Application {
     private NusModsData initNusModsData() {
         NusModsData nusModsData = new NusModsData();
 
-        Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
-        if (moduleListOptional.isPresent()) {
-            nusModsData.setModuleList(moduleListOptional.get());
+        Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
+        if (moduleSummaryListOptional.isPresent()) {
+            nusModsData.setModuleSummaryList(moduleSummaryListOptional.get());
         }
 
         Optional<Holidays> holidaysOptional = Cache.loadHolidays();
