@@ -6137,7 +6137,7 @@
     "title" : "Professional Communication"
   }, {
     "moduleCode" : "ES2331",
-    "semesters" : [ 1, 2 ],
+    "semesters" : [ 1 ],
     "title" : "Communicating Engineering"
   }, {
     "moduleCode" : "ES2531",
@@ -21017,7 +21017,7 @@
     "title" : "Thinking in Systems: Diseases and Healthcare"
   }, {
     "moduleCode" : "UTC1702C",
-    "semesters" : [ 1, 2 ],
+    "semesters" : [ 1 ],
     "title" : "Thinking in Systems: Sustainability and Us"
   }, {
     "moduleCode" : "UTC1702D",
@@ -21687,6 +21687,10 @@
     "moduleCode" : "YHU3323",
     "semesters" : [ 1 ],
     "title" : "Model Operas and the Chinese Cultural Revolution"
+  }, {
+    "moduleCode" : "YHU3327",
+    "semesters" : [ 2 ],
+    "title" : "Social Practice Art"
   }, {
     "moduleCode" : "YHU3328",
     "semesters" : [ 2 ],

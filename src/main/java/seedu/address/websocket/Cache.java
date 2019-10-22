@@ -261,13 +261,13 @@ public class Cache {
         JSONObject modulesJson = new JSONObject();
         if (objOptional.isPresent()) { // found cached file
             modulesJson = (JSONObject) objOptional.get();
-            if (modulesJson.containsKey(moduleId)) { // found moduleId in cached file
-                JSONObject moduleJson = (JSONObject) modulesJson.get(moduleId);
+            if (modulesJson.containsKey(moduleId.toString())) { // found moduleId in cached file
+                JSONObject moduleJson = (JSONObject) modulesJson.get(moduleId.toString());
                 return Optional.of(NusModsParser.parseModule(moduleJson));
             }
         }
 
-        logger.info("Module not found in cache, getting from API...");
+        logger.info("Module " + moduleId + " not found in cache, getting from API...");
         Optional<JSONObject> jsonObjFromApiOptional = api.getModule(moduleId.getModuleCode());
         if (jsonObjFromApiOptional.isPresent()) { // found module from API
             Module module = NusModsParser.parseModule(jsonObjFromApiOptional.get());

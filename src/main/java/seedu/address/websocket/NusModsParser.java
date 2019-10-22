@@ -164,7 +164,7 @@ public class NusModsParser {
                 weekNumbers.add(Integer.parseInt(ja.get(i).toString()));
             }
         } else {
-            assert true : obj.toString().startsWith("{");
+            assert obj.toString().startsWith("{");
             JSONObject jo = (JSONObject) obj;
             startDateString = jo.get("start").toString();
             endDateString = jo.get("end").toString();
@@ -176,10 +176,12 @@ public class NusModsParser {
                 for (int i = 0; i < ja.size(); i++) {
                     weekNumbers.add(Integer.parseInt(ja.get(i).toString()));
                 }
-            } else { // start, end and weekInterval format
-                assert true : jo.containsKey("weekInterval");
+            } else { // start, end and weekInterval/default format
                 type = 3;
-                weekInterval = Integer.parseInt(jo.get("weekInterval").toString());
+                weekInterval = 1;
+                if (jo.containsKey("weekInterval")) {
+                    weekInterval = Integer.parseInt(jo.get("weekInterval").toString());
+                }
             }
         }
 
