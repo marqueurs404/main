@@ -4,7 +4,6 @@ import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.Holidays;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleList;
-import seedu.address.model.module.ModuleSummary;
 import seedu.address.model.module.ModuleSummaryList;
 
 /**

@@ -133,16 +133,19 @@ public class MainApp extends Application {
         Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
         if (moduleSummaryListOptional.isPresent()) {
             nusModsData.setModuleSummaryList(moduleSummaryListOptional.get());
+            logger.info("Loaded module summary list");
         }
 
         Optional<Holidays> holidaysOptional = Cache.loadHolidays();
         if (holidaysOptional.isPresent()) {
             nusModsData.setHolidays(holidaysOptional.get());
+            logger.info("Loaded holidays");
         }
 
         Optional<AcadCalendar> acadCalendarOptional = Cache.loadAcadCalendar();
         if (acadCalendarOptional.isPresent()) {
             nusModsData.setAcadCalendar(acadCalendarOptional.get());
+            logger.info("Loaded academic calendar");
         }
         return nusModsData;
     }
