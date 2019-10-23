@@ -511,7 +511,7 @@ Since the `AddNusModCommand` is implemented in a similar fashion with `AddNusMod
 
 *Steps*
 
-. The user types in the command `addmods n/NAME l/NUSMODS_SHARE_LINK` and the 
+. The user types in the command `addmods n/NAME l/NUSMODS_SHARE_LINK` and the
 //TODO: Steps
 
 ==== Design Considerations
