@@ -24,6 +24,13 @@ public class ImportMods {
      * Main driver.
      */
     public static void main(String[] args) {
+        importMods();
+    }
+
+    /**
+     * Method to import detailed data of all nus modules for the default academic year.
+     */
+    public static void importMods() {
         NusModsApi api = new NusModsApi(AppSettings.DEFAULT_ACAD_YEAR);
         Optional<JSONArray> moduleSummaryJsonOptional = api.getModuleList();
 
