@@ -262,6 +262,30 @@ We are using `java.util.logging` package for logging. The `LogsCenter` class is 
 
 Certain properties of the application can be controlled (e.g user prefs file location, logging level) through the configuration file (default: `config.json`).
 
+// tag::nusmods[]
+=== NUSMods Integration
+==== Implementation
+
+The application makes use of data from https://api.nusmods.com/v2/[NUSMods API] to allow users to generate their schedules based on their NUSMods timetable (`AddNusModsCommand`) or individual NUS modules (`AddNusModCommand`).
+
+The class `NusModsApi` contains methods for querying different endpoints of the NUSMods API and parsing the query results into `JSONObject` or `JSONArray` objects.
+
+===== Caching Mechanism for Limited Connectivity Support
+
+To support limited connectivity in our application, the results of all API queries are preprocessed and saved into the resources directory. The key information that we require for each NUS module is the timetable information. Unfortunately, there is no available endpoint which provides the timetable information of all modules at once - there is only an endpoint which provides the timetable information of one module per query. Thus, we developed a small program in `logic.internal.nusmods.ImportMods` to make that query for every module and build a list of modules data containing the timetable information.
+
+//insert diagram websocket - logic.internal.nusmods diagram
+
+===== NUSMods Data
+
+==== Design Considerations
+
+
+Step 1.
+
+
+// end::nusmods[]
+
 == Documentation
 
 Refer to the guide <<Documentation#, here>>.
