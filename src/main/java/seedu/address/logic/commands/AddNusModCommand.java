@@ -10,7 +10,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_SEMESTER;
 import java.util.List;
 import java.util.Optional;
 
-import javafx.collections.ObservableList;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.commands.exceptions.ModuleToEventMappingException;
 import seedu.address.model.Model;

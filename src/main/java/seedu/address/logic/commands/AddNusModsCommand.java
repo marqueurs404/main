@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LINK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javafx.collections.ObservableList;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.commands.exceptions.ModuleToEventMappingException;
 import seedu.address.model.Model;
@@ -141,14 +141,15 @@ public class AddNusModsCommand extends Command {
                 .collect(Collectors.toList());
 
         Weeks weeks = lesson.getWeeks();
+        DayOfWeek day = lesson.getDay();
 
         if (weeks.getType() == 1) {
             String semStartDateStartTimeString = startAcadSemDateString + " " + lesson.getStartTime().toString();
             String semStartDateEndTimeString = startAcadSemDateString + " " + lesson.getEndTime().toString();
             LocalDateTime semStartDateStartTime = LocalDateTime.parse(
-                    semStartDateStartTimeString, DT_FORMATTER);
+                    semStartDateStartTimeString, DT_FORMATTER).with(day);
             LocalDateTime semStartDateEndTime = LocalDateTime.parse(
-                    semStartDateEndTimeString, DT_FORMATTER);
+                    semStartDateEndTimeString, DT_FORMATTER).with(day);
 
             for (int weekNo : weeks.getWeekNumbers()) {
                 LocalDateTime timeslotStart = semStartDateStartTime.plusDays(WEEK_LENGTH * (weekNo - 1));
@@ -166,9 +167,9 @@ public class AddNusModsCommand extends Command {
             String lessonStartDateStartTimeString = weeks.getStartDateString() + " " + lesson.getStartTime().toString();
             String lessonStartDateEndTimeString = weeks.getStartDateString() + " " + lesson.getEndTime().toString();
             LocalDateTime lessonStartDateStartTime = LocalDateTime.parse(
-                    lessonStartDateStartTimeString, DT_FORMATTER);
+                    lessonStartDateStartTimeString, DT_FORMATTER).with(day);
             LocalDateTime lessonStartDateEndTime = LocalDateTime.parse(
-                    lessonStartDateEndTimeString, DT_FORMATTER);
+                    lessonStartDateEndTimeString, DT_FORMATTER).with(day);
 
             for (int weekNo : weeks.getWeekNumbers()) {
                 LocalDateTime timeslotStart = lessonStartDateStartTime.plusDays(WEEK_LENGTH * (weekNo - 1));
@@ -184,8 +185,8 @@ public class AddNusModsCommand extends Command {
             }
         } else {
             assert true : weeks.getType() == 3;
-            LocalDate lessonStartDate = LocalDate.parse(weeks.getStartDateString(), DATE_FORMATTER);
-            LocalDate lessonEndDate = LocalDate.parse(weeks.getEndDateString(), DATE_FORMATTER);
+            LocalDate lessonStartDate = LocalDate.parse(weeks.getStartDateString(), DATE_FORMATTER).with(day);
+            LocalDate lessonEndDate = LocalDate.parse(weeks.getEndDateString(), DATE_FORMATTER).with(day);
             LocalDate tempDate = lessonStartDate;
             int weekInterval = weeks.getWeekInterval();
 

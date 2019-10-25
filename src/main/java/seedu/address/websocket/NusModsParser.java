@@ -2,6 +2,7 @@ package seedu.address.websocket;
 
 import static java.util.Objects.requireNonNull;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +13,6 @@ import org.json.simple.JSONObject;
 
 import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.AcadYear;
-import seedu.address.model.module.Day;
 import seedu.address.model.module.Description;
 import seedu.address.model.module.EndTime;
 import seedu.address.model.module.Exam;
@@ -127,6 +127,7 @@ public class NusModsParser {
      * @return parsed Lesson.
      */
     public static Lesson parseLesson(JSONObject obj) {
+        //TODO: all values are necessary else throw parseexception
         requireNonNull(obj);
         LessonNo lessonNo = new LessonNo(obj.getOrDefault("classNo", "").toString());
         StartTime startTime = new StartTime(obj.getOrDefault("startTime", "").toString());
@@ -137,7 +138,8 @@ public class NusModsParser {
                 : Weeks.emptyWeeks();
 
         LessonType lessonType = new LessonType(obj.getOrDefault("lessonType", "").toString());
-        Day day = new Day(obj.getOrDefault("day", "").toString());
+        String dayString = obj.getOrDefault("day", "").toString().trim().toUpperCase();
+        DayOfWeek day = DayOfWeek.valueOf(dayString);
         Venue venue = new Venue(obj.getOrDefault("venue", "").toString());
 
         return new Lesson(lessonNo, startTime, endTime, weeks, lessonType, day, venue);

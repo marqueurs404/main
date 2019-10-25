@@ -1,5 +1,9 @@
 package seedu.address.model.module;
 
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 /**
  * Represents a Lesson in an academic semester of a module.
  */
@@ -9,11 +13,11 @@ public class Lesson {
     private EndTime endTime;
     private Weeks weeks;
     private LessonType lessonType;
-    private Day day;
+    private DayOfWeek day;
     private Venue venue;
 
     public Lesson(LessonNo lessonNo, StartTime startTime, EndTime endTime, Weeks weeks,
-                  LessonType lessonType, Day day, Venue venue) {
+                  LessonType lessonType, DayOfWeek day, Venue venue) {
         this.lessonNo = lessonNo;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -28,7 +32,7 @@ public class Lesson {
         String result = "ClassNo: " + lessonNo + " "
                 + "Weeks: " + weeks + " "
                 + "LessonType: " + lessonType + " "
-                + "Day: " + day + " "
+                + "Day: " + day.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
                 + "Start: " + startTime + " "
                 + "End: " + endTime + " "
                 + "Venue: " + venue.toString();
@@ -56,7 +60,7 @@ public class Lesson {
         return lessonType;
     }
 
-    public Day getDay() {
+    public DayOfWeek getDay() {
         return day;
     }
 
