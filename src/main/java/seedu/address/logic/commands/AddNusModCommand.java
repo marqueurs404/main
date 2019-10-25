@@ -8,12 +8,15 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SEMESTER;
 import static seedu.address.model.util.ModuleEventMappingUtil.mapModuleToEvent;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.commands.exceptions.ModuleToEventMappingException;
 import seedu.address.model.Model;
+import seedu.address.model.display.detailwindow.DetailWindowDisplayType;
+import seedu.address.model.display.sidepanel.SidePanelDisplayType;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.LessonNo;
 import seedu.address.model.module.Module;
@@ -40,6 +43,8 @@ public class AddNusModCommand extends Command {
     public static final String MESSAGE_SUCCESS = "Added module to person's schedule: \n\n";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Unable to find person";
     public static final String MESSAGE_MODULE_NOT_FOUND = "Unable to find module";
+    public static final String MESSAGE_EVENTS_CLASH = "Unable to add module - there is a timing clash "
+            + "between the module you're adding and the events in the person's schedule!";
 
     private final Name name;
     private final ModuleCode moduleCode;
@@ -58,18 +63,15 @@ public class AddNusModCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        AcadYear acadYear = options.getAcadYear().orElse(model.getDefaultAcadYear());
-        SemesterNo semesterNo = options.getSemesterNo().orElse(model.getDefaultSemesterNo());
-
-        // find person with name
         Person person = model.findPerson(name);
         if (person == null) {
             return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
         }
 
+        AcadYear acadYear = options.getAcadYear().orElse(model.getDefaultAcadYear());
+        SemesterNo semesterNo = options.getSemesterNo().orElse(model.getDefaultSemesterNo());
         String startAcadSemDateString = model.getAcadSemStartDateString(acadYear, semesterNo);
         List<String> holidayDateStrings = model.getHolidayDateStrings();
-
         Event event;
         Module module;
         ModuleId moduleId = new ModuleId(acadYear, moduleCode);
@@ -84,7 +86,14 @@ public class AddNusModCommand extends Command {
             return new CommandResult(e.getMessage());
         }
 
-        person.addEvent(event);
+        if (model.isEventClash(name, event)) {
+            return new CommandResult(MESSAGE_EVENTS_CLASH);
+        }
+        model.addEvent(name, event);
+
+        // updates UI
+        model.updateDetailWindowDisplay(name, LocalDateTime.now(), DetailWindowDisplayType.PERSON);
+        model.updateSidePanelDisplay(SidePanelDisplayType.PERSONS);
 
         return new CommandResult(MESSAGE_SUCCESS + person.getSchedule());
     }

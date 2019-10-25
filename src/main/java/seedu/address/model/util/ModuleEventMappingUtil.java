@@ -72,7 +72,7 @@ public class ModuleEventMappingUtil {
         LocalDateTime examDate = exam.getExamDate();
         int examDuration = exam.getExamDuration();
         LocalDateTime timeslotStart = examDate;
-        LocalDateTime timeslotEnd = examDate.plusHours(examDuration);
+        LocalDateTime timeslotEnd = examDate.plusMinutes(examDuration);
         Venue emptyVenue = new Venue(""); //empty cause exam venue is not captured in NUSMods
 
         return new Timeslot(timeslotStart, timeslotEnd, emptyVenue);

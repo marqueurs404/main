@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_LINK;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.model.util.ModuleEventMappingUtil.mapModuleToEvent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import java.util.Map;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.commands.exceptions.ModuleToEventMappingException;
 import seedu.address.model.Model;
+import seedu.address.model.display.detailwindow.DetailWindowDisplayType;
+import seedu.address.model.display.sidepanel.SidePanelDisplayType;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.LessonNo;
 import seedu.address.model.module.Module;
@@ -37,6 +40,10 @@ public class AddNusModsCommand extends Command {
     public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule: \n\n";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Unable to find person";
     public static final String MESSAGE_MODULE_NOT_FOUND = "Unable to get all module details";
+    public static final String MESSAGE_MODULES_CLASH = "Unable to add modules - there is a clash in the "
+            + "timings between the modules you're adding!";
+    public static final String MESSAGE_EVENTS_CLASH = "Unable to add modules - there is a clash in the "
+            + "timings between the modules you're adding and the events in the person's schedule!";
 
     private final Name name;
     private final NusModsShareLink link;
@@ -54,7 +61,6 @@ public class AddNusModsCommand extends Command {
         requireNonNull(model);
         AcadYear acadYear = model.getDefaultAcadYear();
 
-        // find person with name
         Person person = model.findPerson(name);
         if (person == null) {
             return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
@@ -62,7 +68,6 @@ public class AddNusModsCommand extends Command {
 
         String startAcadSemDateString = model.getAcadSemStartDateString(acadYear, link.semesterNo);
         List<String> holidayDateStrings = model.getHolidayDateStrings();
-
 
         // translate module to event
         ArrayList<Event> eventsToAdd = new ArrayList<>();
@@ -81,11 +86,39 @@ public class AddNusModsCommand extends Command {
             }
         }
 
+        if (checkClashingModuleEvents(eventsToAdd)) {
+            return new CommandResult(MESSAGE_MODULES_CLASH);
+        }
         for (Event event : eventsToAdd) {
-            person.addEvent(event);
+            if (model.isEventClash(name, event)) {
+                return new CommandResult(MESSAGE_EVENTS_CLASH);
+            }
+        }
+        for (Event event : eventsToAdd) {
+            model.addEvent(name, event);
         }
 
+        // updates UI
+        model.updateDetailWindowDisplay(name, LocalDateTime.now(), DetailWindowDisplayType.PERSON);
+        model.updateSidePanelDisplay(SidePanelDisplayType.PERSONS);
+
         return new CommandResult(MESSAGE_SUCCESS + person.getSchedule());
+    }
+
+    /**
+     * Checks if modules have clashing timeslots between one another.
+     */
+    private boolean checkClashingModuleEvents(ArrayList<Event> eventsToAdd) {
+        for (int i = 0; i < eventsToAdd.size() - 1; i++) {
+            Event event = eventsToAdd.get(i);
+            for (int j = i + 1; j < eventsToAdd.size(); j++) {
+                Event otherEvent = eventsToAdd.get(j);
+                if (event.isClash(otherEvent)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
