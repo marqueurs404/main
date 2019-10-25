@@ -253,38 +253,27 @@ Examples:
 * `export-vr g/TimeBook o/timetable.jpg`
 * `export-vr n/John Doe n/Joe Dohn n/Jackie Chan o/timetable.jpg`
 
-=== Export ICS: `export-ics`
+//=== Export ICS: `export-ics`
+//
+//Output the free time for a certain group as an ics file. This ics file could be imported into google calendar. +
+//Format:
+//
+//* `export-ics OUTPUT_FILENAME` +
+//
+//Examples:
+//
+//* `Export-ics -n CS3230T`
 
-Output the free time for a certain group as an ics file. This ics file could be imported into google calendar. +
-Format:
-
-* `export-ics OUTPUT_FILENAME` +
-
-Examples:
-
-* `Export-ics -n CS3230T`
-
-=== Import ICS: `import-ics`
-
-Import the ics file of an individual. +
-Format:
-
-* `import-ics NAME FILEPATH` +
-
-Examples:
-
-* `Import-ics -t individual -n Catherine -p /data/timetable.ics`
-
-=== Import ICS: `import-ics`
-
-Import the ics file of an individual. +
-Format:
-
-* `import-ics NAME FILEPATH` +
-
-Examples:
-
-* `Import-ics -t individual -n Catherine -p /data/timetable.ics`
+//=== Import ICS: `import-ics`
+//
+//Import the ics file of an individual. +
+//Format:
+//
+//* `import-ics NAME FILEPATH` +
+//
+//Examples:
+//
+//* `Import-ics -t individual -n Catherine -p /data/timetable.ics`
 
 === Get Closest Location: `closestlocation`
 
