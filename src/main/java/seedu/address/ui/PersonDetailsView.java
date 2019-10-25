@@ -14,9 +14,6 @@ public class PersonDetailsView extends UiPart<Region> {
     private static final String FXML = "PersonDetailsView.fxml";
 
     @FXML
-    private StackPane personDetailCard;
-
-    @FXML
     private StackPane personSchedule;
 
     @FXML
@@ -25,9 +22,7 @@ public class PersonDetailsView extends UiPart<Region> {
     public PersonDetailsView(DetailWindowDisplay detailWindowDisplay) {
         super(FXML);
         WeekSchedule schedule = detailWindowDisplay.getWeekSchedules().get(0);
-        PersonDetailCard personDetailCard = new PersonDetailCard(schedule.getPersonDisplay());
         ScheduleView sv = new ScheduleView(schedule);
-        this.personDetailCard.getChildren().add(personDetailCard.getRoot());
         this.personSchedule.getChildren().add(sv.getRoot());
     }
 

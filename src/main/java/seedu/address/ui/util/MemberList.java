@@ -37,6 +37,8 @@ public class MemberList extends UiPart<Region> {
             listMembers.getChildren().add(memberCard.getRoot());
         }
         listHeaderContainer.hvalueProperty().bindBidirectional(listMemberContainer.hvalueProperty());
+        listMemberContainer.setFitToWidth(true);
+        listHeaderContainer.setFitToWidth(true);
     }
 
     /**
@@ -77,10 +79,6 @@ public class MemberList extends UiPart<Region> {
         }
 
         private GridPane setUpCard(String color) {
-            memberCard.setStyle("-fx-background-color: white;"
-                    + "-fx-border-radius: 5;"
-                    + "-fx-background-radius: 5;"
-                    + "-fx-pref-height: 50;");
             DropShadow shadowEffect = new DropShadow();
             shadowEffect.setOffsetY(3);
             shadowEffect.setOffsetX(3);
