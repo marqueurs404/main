@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_LESSON_NOS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MODULE_CODE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SEMESTER;
+import static seedu.address.model.util.ModuleEventMappingUtil.mapModuleToEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +76,7 @@ public class AddNusModCommand extends Command {
 
         try {
             module = model.findModule(moduleId);
-            event = AddNusModsCommand.createEvent(module, startAcadSemDateString, semesterNo,
+            event = mapModuleToEvent(module, startAcadSemDateString, semesterNo,
                     this.lessonNoList, holidayDateStrings);
         } catch (ModuleNotFoundException e) {
             return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
