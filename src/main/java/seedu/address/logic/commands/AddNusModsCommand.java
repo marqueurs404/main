@@ -70,18 +70,10 @@ public class AddNusModsCommand extends Command {
         AcadYear acadYear = model.getDefaultAcadYear();
 
         // find person with name
-        ObservableList<Person> personList = model.getObservablePersonList();
-        Person person = null;
-        for (Person p : personList) {
-            if (p.getName().equals(name)) {
-                person = p;
-                break;
-            }
-        }
+        Person person = model.findPerson(name);
         if (person == null) {
             return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
         }
-
 
         String startAcadSemDateString = model.getAcadSemStartDateString(acadYear, link.semesterNo);
         List<String> holidayDateStrings = model.getHolidayDateStrings();
