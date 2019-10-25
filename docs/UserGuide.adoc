@@ -242,8 +242,8 @@ Format:
 
 Examples:
 
-* `addmod -n John -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
-* `addmod -n Bob -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmods -n John -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmods -n Bob -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
 
 === Show group: `show`
 
@@ -379,6 +379,12 @@ e.g. `deleteperson n/Benedict`
 e.g. `findperson n/James Jake`
 * *Add Event to Person's Schedule* : `addevent n/NAME e/EVENT_NAME t/DATETIME` +
 e.g. `addevent n/John e/Math Lecture t/26092019:1300-26092019:1400-LT25`
+* *Add Module to Person's Schedule* : `addmod -n NAME -m MODULE_CODE -class CLASS_NUMBERS(comma-separated) [-ay ACADEMIC_YEAR] [-s SEMESTER]` +
+e.g. `addmod -n John -m CS2103T -class G01,T5 -ay 2019/2020 -s 1`
+* *Add Modules to Person's Schedule via NUSMods Link* : `addmods -n NAME -l NUSMODS_SHARE_LINK` +
+e.g. `addmods -n John -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* *Show Module Classes Schedule* : `showmod -m MODULE_CODE [-ay ACADEMIC_YEAR] [-s SEMESTER]` +
+e.g. `showmod -m CS3230 -ay 2019/2020 -s 2`
 * *Show Person Details and Schedule* : `show n/NAME` +
 e.g. `show n/James Lee`
 * *Add Group* `addgroup g/GROUP_NAME [r/GROUP_REMARK]` +
