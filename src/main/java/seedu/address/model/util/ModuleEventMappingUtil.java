@@ -60,7 +60,9 @@ public class ModuleEventMappingUtil {
         for (Lesson lesson : lessons) {
             timeslots.addAll(generateLessonTimeslots(lesson, startAcadSemDateString, holidayDateStrings));
         }
-        timeslots.add(generateExamTimeslot(semester.getExam()));
+        if (!semester.getExam().equals(Exam.emptyExam())) {
+            timeslots.add(generateExamTimeslot(semester.getExam()));
+        }
 
         return new Event(module.getModuleCode().toString(), timeslots);
     }
