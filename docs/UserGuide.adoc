@@ -218,6 +218,33 @@ Examples:
 * `addevent n/John e/Math Lecture t/26092019:1300-26092019:1400-LT25`
 * `addevent n/John c/23F6B742CE`
 
+=== Add Module: `addmod`
+
+Adds an NUS module as an event to a person's schedule in TimeBook. It checks and ensures classes are available for the module in the academic year and semester before adding to the person's schedule. Default values for `ACADEMIC_YEAR` is 2019/2020 and `SEMESTER` is 1.
+
+Format:
+
+* `addmod -n NAME -m MODULE_CODE -class CLASS_NUMBERS(comma-separated) [-ay ACADEMIC_YEAR] [-s SEMESTER]` +
+
+Examples:
+
+* `addmod -n John -m CS2103T -class G01,T5`
+* `addmod -n John -m CS2103T -class G01,T5 -ay 2018/2019`
+* `addmod -n John -m CS2103T -class G01,T5 -ay 2019/2020 -s 1`
+
+=== Add Modules via Link: `addmods`
+
+Adds NUS modules given the NUSMods share link, as events to a person's schedule in TimeBook.
+
+Format:
+
+* `addmods -n NAME -l NUSMODS_SHARE_LINK` +
+
+Examples:
+
+* `addmod -n John -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmod -n Bob -l https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+
 === Show group: `show`
 
 Shows details of a group: who are its members and their available timings +
@@ -240,6 +267,20 @@ Format:
 Examples:
 
 * `show n/James Lee` +
+
+=== Show Module: `showmod`
+
+Shows the schedule of available classes for the module in the academic year and semester. Default values for `ACADEMIC_YEAR` is 2019/2020 and `SEMESTER` is 1.
+
+Format:
+
+* `showmod -m MODULE_CODE [-ay ACADEMIC_YEAR] [-s SEMESTER]`
+
+Examples:
+
+* `showmod -m CS2103T`
+* `showmod -m GEQ1000 -ay 2019/2020`
+* `showmod -m CS3230 -ay 2019/2020 -s 2`
 
 === Export VR(Virtual Representation): `export-vr`
 
