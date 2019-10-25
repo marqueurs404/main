@@ -16,6 +16,7 @@ import seedu.address.model.module.Exam;
 import seedu.address.model.module.Lesson;
 import seedu.address.model.module.LessonNo;
 import seedu.address.model.module.Module;
+import seedu.address.model.module.Semester;
 import seedu.address.model.module.SemesterNo;
 import seedu.address.model.module.Weeks;
 import seedu.address.model.person.schedule.Event;
@@ -43,19 +44,23 @@ public class ModuleEventMappingUtil {
         requireNonNull(lessonNos);
         requireNonNull(holidayDateStrings);
 
+        Semester semester = module.getSemester(semesterNo);
         ArrayList<Lesson> lessons = new ArrayList<>();
+        ArrayList<Timeslot> timeslots = new ArrayList<>();
+
         for (LessonNo lessonNo : lessonNos) {
-            List<Lesson> lessonsFound = module.getSemester(semesterNo).findLessons(lessonNo);
+            List<Lesson> lessonsFound = semester.findLessons(lessonNo);
             if (lessonsFound.isEmpty()) {
                 throw new ModuleToEventMappingException("Lesson number not found!");
             }
             lessons.addAll(lessonsFound);
         }
 
-        ArrayList<Timeslot> timeslots = new ArrayList<>();
+        // Add timeslots for lessons and exam
         for (Lesson lesson : lessons) {
             timeslots.addAll(generateLessonTimeslots(lesson, startAcadSemDateString, holidayDateStrings));
         }
+        timeslots.add(generateExamTimeslot(semester.getExam()));
 
         return new Event(module.getModuleCode().toString(), timeslots);
     }
@@ -63,10 +68,15 @@ public class ModuleEventMappingUtil {
     /**
      * Generate Timeslot for Exam.
      */
-//    public static Timeslot generateExamTimeslot(Exam exam) {
-//        exam
-//        return
-//    }
+    public static Timeslot generateExamTimeslot(Exam exam) {
+        LocalDateTime examDate = exam.getExamDate();
+        int examDuration = exam.getExamDuration();
+        LocalDateTime timeslotStart = examDate;
+        LocalDateTime timeslotEnd = examDate.plusHours(examDuration);
+        Venue emptyVenue = new Venue(""); //empty cause exam venue is not captured in NUSMods
+
+        return new Timeslot(timeslotStart, timeslotEnd, emptyVenue);
+    }
 
     /**
      * Generate all timeslots for the lesson, taking into account of holidays.

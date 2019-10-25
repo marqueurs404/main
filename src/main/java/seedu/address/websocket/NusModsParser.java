@@ -3,6 +3,7 @@ package seedu.address.websocket;
 import static java.util.Objects.requireNonNull;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,6 +37,8 @@ import seedu.address.model.module.Weeks;
  * Parse data from NusModsApi
  */
 public class NusModsParser {
+    public static final int GMT_OFFSET_SINGAPORE = 8;
+
     //TODO: checks to throw parseException if missing compulsory keys
     //      checks to throw invalidValueException if value is invalid
     /**
@@ -114,11 +117,17 @@ public class NusModsParser {
             }
         }
 
-        String examDate = obj.getOrDefault("examDate", "").toString();
-        String examDuration = obj.getOrDefault("examDuration", "").toString();
-        Exam exam = new Exam(examDate, examDuration);
 
-        return new Semester(semesterNo, timetable, exam);
+        if (obj.containsKey("examDate")) {
+            String examDateString = obj.getOrDefault("examDate", "").toString()
+                    .replace("Z", "");
+            int examDuration = Integer.parseInt(obj.getOrDefault("examDuration", "").toString());
+            LocalDateTime examDate = LocalDateTime.parse(examDateString).plusHours(GMT_OFFSET_SINGAPORE);
+            Exam exam = new Exam(examDate, examDuration);
+            return new Semester(semesterNo, timetable, exam);
+        }
+
+        return new Semester(semesterNo, timetable);
     }
 
     /**

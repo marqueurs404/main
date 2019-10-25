@@ -11,6 +11,12 @@ public class Semester {
     private final ArrayList<Lesson> timetable = new ArrayList<>();
     private final Exam exam;
 
+    public Semester(SemesterNo semesterNo, List<Lesson> timetable) {
+        this.semesterNo = semesterNo;
+        this.exam = Exam.emptyExam();
+        this.timetable.addAll(timetable);
+    }
+
     public Semester(SemesterNo semesterNo, List<Lesson> timetable,
                     Exam exam) {
         this.semesterNo = semesterNo;
