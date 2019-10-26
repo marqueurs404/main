@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Weeks of the Lesson.
+ * Weeks of the {@code Lesson}, used to represent the schedule of a lesson.
  */
 public class Weeks {
     private List<Integer> weekNumbers = new ArrayList<>();
     private String startDateString;
     private String endDateString;
     private int weekInterval;
-    private int type; //TODO: convert to enum
+    private WeeksType type;
 
     public Weeks(List<Integer> weekNumbers, String startDateString,
-                 String endDateString, int weekInterval, int type) {
+                 String endDateString, int weekInterval, WeeksType type) {
         this.weekNumbers = weekNumbers;
         this.startDateString = startDateString;
         this.endDateString = endDateString;
@@ -26,11 +26,11 @@ public class Weeks {
         this.startDateString = "";
         this.endDateString = "";
         this.weekInterval = -1;
-        this.type = -1;
+        this.type = null;
     }
 
     /**
-     * Static method to get an empty remark.
+     * Static method to get an empty week.
      */
     public static Weeks emptyWeeks() {
         return new Weeks();
@@ -68,11 +68,11 @@ public class Weeks {
         this.weekInterval = weekInterval;
     }
 
-    public int getType() {
+    public WeeksType getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(WeeksType type) {
         this.type = type;
     }
 
@@ -80,12 +80,12 @@ public class Weeks {
     public String toString() {
         String output = "";
         switch(type) {
-        case(1): output = "Week Numbers: " + weekNumbers.toString();
+        case WEEK_NUMBERS: output = "Week Numbers: " + weekNumbers.toString();
                 break;
-        case(2): output = "Start Date: " + startDateString + " End Date: "
+        case START_END_WEEK_NUMBERS: output = "Start Date: " + startDateString + " End Date: "
                 + endDateString + " Week Numbers: " + weekNumbers.toString();
                 break;
-        case(3): output = "Start Date: " + startDateString + " End Date: "
+        case START_END_WEEK_INTERVAL: output = "Start Date: " + startDateString + " End Date: "
                 + endDateString + " Week Interval: " + weekInterval;
                 break;
         default: assert false;

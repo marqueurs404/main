@@ -19,6 +19,7 @@ import seedu.address.model.module.Module;
 import seedu.address.model.module.Semester;
 import seedu.address.model.module.SemesterNo;
 import seedu.address.model.module.Weeks;
+import seedu.address.model.module.WeeksType;
 import seedu.address.model.person.schedule.Event;
 import seedu.address.model.person.schedule.Timeslot;
 import seedu.address.model.person.schedule.Venue;
@@ -68,7 +69,7 @@ public class ModuleEventMappingUtil {
     }
 
     /**
-     * Generate Timeslot for Exam.
+     * Generate a {@code Timeslot} for Exam.
      */
     public static Timeslot generateExamTimeslot(Exam exam) {
         LocalDateTime examDate = exam.getExamDate();
@@ -81,11 +82,10 @@ public class ModuleEventMappingUtil {
     }
 
     /**
-     * Generate all timeslots for the lesson, taking into account of holidays.
+     * Generate all timeslots for the lesson, taking into account start date of semester and holidays.
      */
     public static List<Timeslot> generateLessonTimeslots(Lesson lesson, String startAcadSemDateString,
                                                          List<String> holidayDateStrings) {
-        // TODO: do week type parsing in NusModsParser.parseWeeks
         List<Timeslot> timeslots = new ArrayList<>();
 
         Venue venue = new Venue(lesson.getVenue().toString());
@@ -97,7 +97,7 @@ public class ModuleEventMappingUtil {
         Weeks weeks = lesson.getWeeks();
         DayOfWeek day = lesson.getDay();
 
-        if (weeks.getType() == 1) {
+        if (weeks.getType() == WeeksType.WEEK_NUMBERS) {
             String semStartDateStartTimeString = startAcadSemDateString + " " + lesson.getStartTime().toString();
             String semStartDateEndTimeString = startAcadSemDateString + " " + lesson.getEndTime().toString();
             LocalDateTime semStartDateStartTime = LocalDateTime.parse(
@@ -117,7 +117,7 @@ public class ModuleEventMappingUtil {
                 Timeslot ts = new Timeslot(timeslotStart, timeslotEnd, venue);
                 timeslots.add(ts);
             }
-        } else if (weeks.getType() == 2) {
+        } else if (weeks.getType() == WeeksType.START_END_WEEK_NUMBERS) {
             String lessonStartDateStartTimeString = weeks.getStartDateString() + " " + lesson.getStartTime().toString();
             String lessonStartDateEndTimeString = weeks.getStartDateString() + " " + lesson.getEndTime().toString();
             LocalDateTime lessonStartDateStartTime = LocalDateTime.parse(
@@ -138,7 +138,7 @@ public class ModuleEventMappingUtil {
                 timeslots.add(ts);
             }
         } else {
-            assert true : weeks.getType() == 3;
+            assert weeks.getType() == WeeksType.START_END_WEEK_INTERVAL;
             LocalDate lessonStartDate = LocalDate.parse(weeks.getStartDateString(), DATE_FORMATTER).with(day);
             LocalDate lessonEndDate = LocalDate.parse(weeks.getEndDateString(), DATE_FORMATTER).with(day);
             LocalDate tempDate = lessonStartDate;

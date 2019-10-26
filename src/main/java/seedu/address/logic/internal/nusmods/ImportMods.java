@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 
 import seedu.address.commons.core.AppSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleList;
@@ -37,14 +38,19 @@ public class ImportMods {
      */
     public static void importMods(AcadYear year) {
         NusModsApi api = new NusModsApi(year);
-        ModuleSummaryList moduleSummaries;
+        ModuleSummaryList moduleSummaries = null;
 
         // try to get module summaries from api, then local file
         Optional<JSONArray> moduleSummaryJsonOptional = api.getModuleList();
         if (moduleSummaryJsonOptional.isPresent()) {
-            moduleSummaries = NusModsParser.parseModuleSummaryList(
-                    moduleSummaryJsonOptional.get(), year);
-        } else {
+            try {
+                moduleSummaries = NusModsParser.parseModuleSummaryList(
+                        moduleSummaryJsonOptional.get(), year);
+            } catch (ParseException e) {
+                logger.info("Failed to parse module summaries: " + e.getMessage());
+            }
+        }
+        if (moduleSummaries != null) {
             Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
             if (!moduleSummaryListOptional.isPresent()) {
                 logger.severe("No module summaries, can't scrape all detailed modules.");
@@ -53,16 +59,19 @@ public class ImportMods {
             moduleSummaries = moduleSummaryListOptional.get();
         }
 
-        int total = moduleSummaries.getModuleSummaries().size();
+        // load detailed modules data from local file
+        ModuleList moduleList = new ModuleList();
+        Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
+        if (moduleListOptional.isPresent()) {
+            moduleList = moduleListOptional.get();
+        }
+
+        // Cache module if missing from local file
         int foundFromFile = 0;
         int foundFromApi = 0;
         int failed = 0;
         int curr = 0;
-
-        Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
-        ModuleList moduleList = moduleListOptional.get();
-
-        // Cache module if missing from local file
+        int total = moduleSummaries.getModuleSummaries().size();
         for (ModuleSummary modSummary : moduleSummaries.getModuleSummaries()) {
             curr += 1;
             try {
