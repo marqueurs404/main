@@ -4,10 +4,10 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -33,6 +33,7 @@ import seedu.address.model.mapping.PersonToGroupMapping;
 import seedu.address.model.mapping.PersonToGroupMappingList;
 import seedu.address.model.mapping.Role;
 import seedu.address.model.module.AcadYear;
+import seedu.address.model.module.Holidays;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleId;
 import seedu.address.model.module.ModuleList;
@@ -558,12 +559,12 @@ public class ModelManager implements Model {
         nusModsData.addModule(module);
     }
 
-    public String getAcadSemStartDateString(AcadYear acadYear, SemesterNo semesterNo) {
-        return nusModsData.getAcadCalendar().getStartDateString(acadYear, semesterNo);
-    };
+    public LocalDate getAcadSemStartDate(AcadYear acadYear, SemesterNo semesterNo) {
+        return nusModsData.getStartDate(acadYear, semesterNo);
+    }
 
-    public List<String> getHolidayDateStrings() {
-        return nusModsData.getHolidays().getHolidayDates();
+    public Holidays getHolidays() {
+        return nusModsData.getHolidays();
     }
 
     //=========== Gmaps ================================================================================

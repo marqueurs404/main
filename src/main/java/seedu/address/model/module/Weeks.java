@@ -1,39 +1,31 @@
 package seedu.address.model.module;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import seedu.address.commons.exceptions.IllegalValueException;
 
 /**
  * Weeks of the {@code Lesson}, used to represent the schedule of a lesson.
  */
 public class Weeks {
-    private List<Integer> weekNumbers = new ArrayList<>();
-    private String startDateString;
-    private String endDateString;
-    private int weekInterval;
     private WeeksType type;
+    private List<Integer> weekNumbers;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private int weekInterval;
 
-    public Weeks(List<Integer> weekNumbers, String startDateString,
-                 String endDateString, int weekInterval, WeeksType type) {
+    public Weeks(List<Integer> weekNumbers, LocalDate startDate,
+                 LocalDate endDate, int weekInterval, WeeksType type) throws IllegalValueException {
+        if (startDate.isAfter(endDate)) { //DEFENSIVE CODE
+            throw new IllegalValueException("Start date cannot be after end date.");
+        }
         this.weekNumbers = weekNumbers;
-        this.startDateString = startDateString;
-        this.endDateString = endDateString;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.weekInterval = weekInterval;
         this.type = type;
-    }
-
-    public Weeks() {
-        this.startDateString = "";
-        this.endDateString = "";
-        this.weekInterval = -1;
-        this.type = null;
-    }
-
-    /**
-     * Static method to get an empty week.
-     */
-    public static Weeks emptyWeeks() {
-        return new Weeks();
     }
 
     public List<Integer> getWeekNumbers() {
@@ -44,20 +36,20 @@ public class Weeks {
         this.weekNumbers = weekNumbers;
     }
 
-    public String getStartDateString() {
-        return startDateString;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStartDateString(String startDateString) {
-        this.startDateString = startDateString;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public String getEndDateString() {
-        return endDateString;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEndDateString(String endDateString) {
-        this.endDateString = endDateString;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public int getWeekInterval() {
@@ -80,14 +72,17 @@ public class Weeks {
     public String toString() {
         String output = "";
         switch(type) {
-        case WEEK_NUMBERS: output = "Week Numbers: " + weekNumbers.toString();
-                break;
-        case START_END_WEEK_NUMBERS: output = "Start Date: " + startDateString + " End Date: "
-                + endDateString + " Week Numbers: " + weekNumbers.toString();
-                break;
-        case START_END_WEEK_INTERVAL: output = "Start Date: " + startDateString + " End Date: "
-                + endDateString + " Week Interval: " + weekInterval;
-                break;
+        case WEEK_NUMBERS:
+            output = "Week Numbers: " + weekNumbers.toString();
+            break;
+        case START_END_WEEK_NUMBERS:
+            output = "Start Date: " + startDate.toString() + " End Date: "
+                + endDate.toString() + " Week Numbers: " + weekNumbers.toString();
+            break;
+        case START_END_WEEK_INTERVAL:
+            output = "Start Date: " + startDate.toString() + " End Date: "
+                + endDate.toString() + " Week Interval: " + weekInterval;
+            break;
         default: assert false;
         }
         return output;

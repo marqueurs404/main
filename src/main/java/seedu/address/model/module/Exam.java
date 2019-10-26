@@ -1,6 +1,7 @@
 package seedu.address.model.module;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Exam for a Module in a Semester.
@@ -9,18 +10,9 @@ public class Exam {
     private final LocalDateTime examDate;
     private final int examDuration;
 
-    public Exam() {
-        this.examDate = LocalDateTime.MIN;
-        this.examDuration = -1;
-    }
-
     public Exam(LocalDateTime examDate, int examDuration) {
         this.examDate = examDate;
         this.examDuration = examDuration;
-    }
-
-    public static Exam emptyExam() {
-        return new Exam();
     }
 
     public LocalDateTime getExamDate() {
@@ -36,18 +28,24 @@ public class Exam {
         return "Exam Date: " + examDate.toString() + " " + Integer.toString(examDuration);
     }
 
-    /**
-     * Returns true if both exam are the same instance of exam.
-     */
-    public boolean equals(Exam other) {
-        if (other == this) {
-            return true;
-        } else if (other == null) {
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Exam)) {
             return false;
-        } else if (other.examDate.equals(this.examDate) && other.examDuration == this.examDuration) {
+        }
+        Exam exam = (Exam) other;
+        if (exam == this) {
+            return true;
+        } else if (exam.examDate.equals(this.examDate)
+                && exam.examDate.equals(this.examDuration)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(examDate, examDuration);
     }
 }

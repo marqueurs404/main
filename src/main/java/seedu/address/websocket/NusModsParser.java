@@ -3,7 +3,10 @@ package seedu.address.websocket;
 import static java.util.Objects.requireNonNull;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,11 +15,11 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.Description;
-import seedu.address.model.module.EndTime;
 import seedu.address.model.module.Exam;
 import seedu.address.model.module.Holidays;
 import seedu.address.model.module.Lesson;
@@ -29,7 +32,6 @@ import seedu.address.model.module.ModuleSummary;
 import seedu.address.model.module.ModuleSummaryList;
 import seedu.address.model.module.Semester;
 import seedu.address.model.module.SemesterNo;
-import seedu.address.model.module.StartTime;
 import seedu.address.model.module.Title;
 import seedu.address.model.module.Venue;
 import seedu.address.model.module.Weeks;
@@ -40,6 +42,8 @@ import seedu.address.model.module.WeeksType;
  */
 public class NusModsParser {
     public static final int GMT_OFFSET_SINGAPORE = 8;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmm");
 
     /**
      * Ensures the JSONObject has the given keys.
@@ -158,16 +162,19 @@ public class NusModsParser {
         requireCompulsoryKeys(obj, "classNo", "startTime", "endTime", "weeks", "lessonType", "day", "venue");
 
         LessonNo lessonNo = new LessonNo(obj.get("classNo").toString());
-        StartTime startTime = new StartTime(obj.get("startTime").toString());
-        EndTime endTime = new EndTime(obj.get("endTime").toString());
+        LocalTime startTime = LocalTime.parse(obj.get("startTime").toString(), TIME_FORMATTER);
+        LocalTime endTime = LocalTime.parse(obj.get("endTime").toString(), TIME_FORMATTER);
 
         Weeks weeks = parseWeeks(obj.get("weeks"));
 
         LessonType lessonType = new LessonType(obj.get("lessonType").toString());
         DayOfWeek day = getDayOfWeek(obj.get("day").toString());
         Venue venue = new Venue(obj.get("venue").toString());
-
-        return new Lesson(lessonNo, startTime, endTime, weeks, lessonType, day, venue);
+        try {
+            return new Lesson(lessonNo, startTime, endTime, weeks, lessonType, day, venue);
+        } catch (IllegalValueException e) {
+            throw new ParseException(e.getMessage());
+        }
     }
 
     private static DayOfWeek getDayOfWeek(String dayString) {
@@ -183,8 +190,8 @@ public class NusModsParser {
     public static Weeks parseWeeks(Object obj) throws ParseException {
         requireNonNull(obj);
         List<Integer> weekNumbers = new ArrayList<>();
-        String startDateString = "";
-        String endDateString = "";
+        LocalDate startDate = LocalDate.MIN;
+        LocalDate endDate = LocalDate.MAX;
         int weekInterval = -1;
         WeeksType type;
 
@@ -199,8 +206,8 @@ public class NusModsParser {
             assert obj.toString().startsWith("{");
             JSONObject jo = (JSONObject) obj;
             requireCompulsoryKeys(jo, "start", "end");
-            startDateString = jo.get("start").toString();
-            endDateString = jo.get("end").toString();
+            startDate = LocalDate.parse(jo.get("start").toString(), DATE_FORMATTER);
+            endDate = LocalDate.parse(jo.get("end").toString(), DATE_FORMATTER);
 
             // start, end and weekNumbers format
             if (jo.containsKey("weeks")) {
@@ -216,7 +223,11 @@ public class NusModsParser {
             }
         }
 
-        return new Weeks(weekNumbers, startDateString, endDateString, weekInterval, type);
+        try {
+            return new Weeks(weekNumbers, startDate, endDate, weekInterval, type);
+        } catch (IllegalValueException e) {
+            throw new ParseException(e.getMessage());
+        }
     }
 
     /**
@@ -227,19 +238,23 @@ public class NusModsParser {
     public static AcadCalendar parseAcadCalendar(JSONObject obj) {
         requireNonNull(obj);
 
-        Map<String, String> startDates = new LinkedHashMap<>();
+        Map<Map.Entry<AcadYear, SemesterNo>, LocalDate> startDates = new LinkedHashMap<>();
 
-        for (Object acadYearObj : obj.keySet()) {
-            AcadYear acadYear = new AcadYear(acadYearObj.toString());
-            JSONObject semesterNoStartDateObj = (JSONObject) obj.get(acadYearObj.toString());
+        for (Object acadYearKey : obj.keySet()) {
+            AcadYear acadYear = new AcadYear(acadYearKey.toString());
+            JSONObject innerObj = (JSONObject) obj.get(acadYearKey.toString());
 
-            for (Object semesterNoObj : semesterNoStartDateObj.keySet()) {
-                JSONObject startDateObj = (JSONObject) semesterNoStartDateObj.get(semesterNoObj.toString());
-                String acadYearSemNoString = acadYearObj.toString() + " Sem " + semesterNoObj.toString();
-
+            for (Object semesterNoKey : innerObj.keySet()) {
+                // From key from AcadYear and SemesterNo
+                SemesterNo semesterNo = new SemesterNo(semesterNoKey.toString());
+                Map.Entry<AcadYear, SemesterNo> key = Map.entry(acadYear, semesterNo);
+                // Get start date value
+                JSONObject startDateObj = (JSONObject) innerObj.get(semesterNoKey.toString());
                 JSONArray arr = (JSONArray) startDateObj.get("start");
-                String startDate = arr.get(0) + "-" + arr.get(1) + "-" + arr.get(2);
-                startDates.put(acadYearSemNoString, startDate);
+                String startDateString = arr.get(0) + "-" + arr.get(1) + "-" + arr.get(2);
+                LocalDate startDate = LocalDate.parse(startDateString, DATE_FORMATTER);
+                // Put to map
+                startDates.put(key, startDate);
             }
         }
 
@@ -254,10 +269,11 @@ public class NusModsParser {
     public static Holidays parseHolidays(JSONArray arr) {
         requireNonNull(arr);
 
-        List<String> holidayDates = new ArrayList<>();
+        List<LocalDate> holidayDates = new ArrayList<>();
 
         for (int i = 0; i < arr.size(); i++) {
-            holidayDates.add(arr.get(i).toString());
+            LocalDate holiday = LocalDate.parse(arr.get(i).toString(), DATE_FORMATTER);
+            holidayDates.add(holiday);
         }
 
         return new Holidays(holidayDates);

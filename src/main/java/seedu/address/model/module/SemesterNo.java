@@ -1,5 +1,7 @@
 package seedu.address.model.module;
 
+import java.util.Objects;
+
 /**
  * Semester number of the Semester.
  */
@@ -23,18 +25,23 @@ public class SemesterNo {
         return semesterNo;
     }
 
-    /**
-     * Checks if this SemesterNo is equal to other SemesterNo.
-     * @param other to be compared
-     * @return boolean
-     */
-    public boolean equals(SemesterNo other) {
-        if (other == null) {
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof SemesterNo)) {
             return false;
-        } else if (other.toString().equals(this.semesterNo)) {
+        }
+        SemesterNo sNo = (SemesterNo) other;
+        if (sNo == this) {
+            return true;
+        } else if (sNo.semesterNo.equals(this.semesterNo)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(semesterNo);
     }
 }

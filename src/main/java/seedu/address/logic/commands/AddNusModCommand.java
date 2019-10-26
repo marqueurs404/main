@@ -8,6 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SEMESTER;
 import static seedu.address.model.util.ModuleEventMappingUtil.mapModuleToEvent;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import seedu.address.model.Model;
 import seedu.address.model.display.detailwindow.DetailWindowDisplayType;
 import seedu.address.model.display.sidepanel.SidePanelDisplayType;
 import seedu.address.model.module.AcadYear;
+import seedu.address.model.module.Holidays;
 import seedu.address.model.module.LessonNo;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleCode;
@@ -70,16 +72,16 @@ public class AddNusModCommand extends Command {
 
         AcadYear acadYear = options.getAcadYear().orElse(model.getDefaultAcadYear());
         SemesterNo semesterNo = options.getSemesterNo().orElse(model.getDefaultSemesterNo());
-        String startAcadSemDateString = model.getAcadSemStartDateString(acadYear, semesterNo);
-        List<String> holidayDateStrings = model.getHolidayDateStrings();
+        LocalDate startAcadSemDate = model.getAcadSemStartDate(acadYear, semesterNo);
+        Holidays holidays = model.getHolidays();
         Event event;
         Module module;
         ModuleId moduleId = new ModuleId(acadYear, moduleCode);
 
         try {
             module = model.findModule(moduleId);
-            event = mapModuleToEvent(module, startAcadSemDateString, semesterNo,
-                    this.lessonNoList, holidayDateStrings);
+            event = mapModuleToEvent(module, startAcadSemDate, semesterNo,
+                    this.lessonNoList, holidays);
         } catch (ModuleNotFoundException e) {
             return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
         } catch (ModuleToEventMappingException e) {

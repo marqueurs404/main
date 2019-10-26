@@ -2,6 +2,8 @@ package seedu.address.model.module;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The semester of the module
@@ -13,7 +15,7 @@ public class Semester {
 
     public Semester(SemesterNo semesterNo, List<Lesson> timetable) {
         this.semesterNo = semesterNo;
-        this.exam = Exam.emptyExam();
+        this.exam = null;
         this.timetable.addAll(timetable);
     }
 
@@ -47,8 +49,8 @@ public class Semester {
         return semesterNo;
     }
 
-    public Exam getExam() {
-        return exam;
+    public Optional<Exam> getExam() {
+        return Optional.ofNullable(exam);
     }
 
     @Override
@@ -61,5 +63,27 @@ public class Semester {
         }
 
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Semester)) {
+            return false;
+        }
+        Semester s = (Semester) other;
+        if (s == this) {
+            return true;
+        } else if (s.semesterNo.equals(this.semesterNo)
+                && s.timetable.equals(this.timetable)
+                && s.exam.equals(this.exam)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(semesterNo, timetable, exam);
     }
 }
