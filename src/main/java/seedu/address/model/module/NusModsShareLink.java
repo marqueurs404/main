@@ -42,7 +42,7 @@ public class NusModsShareLink {
 
     public static final String SEMESTER_REGEX = "(" + String.join("|", SEMESTER_NUMBER_MAPPING.keySet()) + ")";
     public static final String VALIDATION_REGEX = "^https://nusmods.com/timetable/"
-            + SEMESTER_REGEX + "/share?(.+)$";
+            + SEMESTER_REGEX + "/share?(.+)$"; //TODO: stronger regex
 
     public final String value;
     public final SemesterNo semesterNo;

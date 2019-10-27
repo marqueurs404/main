@@ -1,7 +1,6 @@
 package seedu.address.model.module;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import seedu.address.commons.exceptions.IllegalValueException;

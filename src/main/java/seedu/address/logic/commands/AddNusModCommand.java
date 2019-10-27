@@ -64,7 +64,7 @@ public class AddNusModCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-
+        //TODO: validate input against model data
         Person person = model.findPerson(name);
         if (person == null) {
             return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
