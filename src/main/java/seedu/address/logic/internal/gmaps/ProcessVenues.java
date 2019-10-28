@@ -9,6 +9,7 @@ import seedu.address.commons.exceptions.TimeBookInvalidLocation;
 import seedu.address.commons.exceptions.TimeBookInvalidState;
 import seedu.address.model.gmaps.Location;
 import seedu.address.websocket.Cache;
+import seedu.address.websocket.GmapsApi;
 
 /**
  * This class is used to get nus venues
@@ -16,6 +17,7 @@ import seedu.address.websocket.Cache;
 public class ProcessVenues {
     private JSONArray venuesNusMods;
     private ArrayList<Location> venues = new ArrayList<>();
+    private transient GmapsApi gmapsApi = new GmapsApi();
     private SanitizeLocation sanitizeLocation = new SanitizeLocation();
 
     public ProcessVenues(){
@@ -36,20 +38,12 @@ public class ProcessVenues {
     /**
      * This method is used to process the venues with the latest information from NUSmods and Google Maps
      * @return
+     * @throws ConnectException
      */
-    public ProcessVenues process() {
+    public ProcessVenues process() throws ConnectException {
         ProcessVenues processVenuesWNusMods = getVenuesJsonArray();
         ProcessVenues processVenuesWVenues = processVenuesWNusMods.populateVenues();
         return processVenuesWVenues;
-    }
-
-    /**
-     * Gnerate all static images
-     * @return
-     */
-
-    public void generateImages() {
-        sanitizeLocation.generateImage();
     }
 
     public ArrayList<String> getValidLocationList() {
@@ -61,7 +55,7 @@ public class ProcessVenues {
      * @return
      * @throws ConnectException
      */
-    private ProcessVenues populateVenues() {
+    private ProcessVenues populateVenues() throws ConnectException {
         if (venuesNusMods == null) {
             throw new IllegalStateException("Cannot call getLocation before calling get"
                     + "getVenuesJsonArray");
@@ -80,7 +74,7 @@ public class ProcessVenues {
         return new ProcessVenues(currVenuesNusMod, venues, sanitizeLocation);
     }
 
-    private Location getLocation(int i) {
+    private Location getLocation(int i) throws ConnectException {
         if (venuesNusMods == null) {
             throw new IllegalStateException("Cannot call getLocation before calling get"
                    + "getVenuesJsonArray");
