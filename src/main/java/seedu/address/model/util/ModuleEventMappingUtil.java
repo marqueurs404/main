@@ -27,7 +27,10 @@ import seedu.address.model.person.schedule.Venue;
  * Add an an NUSMods timetable to a person's schedule.
  */
 public class ModuleEventMappingUtil {
+    public static final String MESSAGE_MISSING_LESSONS = "missing class numbers in input!";
+    public static final String MESSAGE_INVALID_LESSONS = "invalid class number in input!";
     private static final int WEEK_LENGTH = 7;
+
 
     /**
      * Converts a {@code Module} to an {@code Event}.
@@ -45,10 +48,13 @@ public class ModuleEventMappingUtil {
         ArrayList<Lesson> lessons = new ArrayList<>();
         ArrayList<Timeslot> timeslots = new ArrayList<>();
 
+        if (lessonNos.isEmpty()) { //no lesson numbers given
+            throw new ModuleToEventMappingException(MESSAGE_MISSING_LESSONS);
+        }
         for (LessonNo lessonNo : lessonNos) {
             List<Lesson> lessonsFound = semester.findLessons(lessonNo);
-            if (lessonsFound.isEmpty()) {
-                throw new ModuleToEventMappingException("Lesson number not found!");
+            if (lessonsFound.isEmpty()) { //module does not have a matching lesson number
+                throw new ModuleToEventMappingException(MESSAGE_INVALID_LESSONS);
             }
             lessons.addAll(lessonsFound);
         }

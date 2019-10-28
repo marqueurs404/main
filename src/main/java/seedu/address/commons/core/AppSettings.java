@@ -13,7 +13,7 @@ public class AppSettings implements Serializable {
 
     // Has to be updated from time to time!
     public static final AcadYear DEFAULT_ACAD_YEAR = new AcadYear("2019/2020");
-    public static final SemesterNo DEFAULT_SEMESTER_NO = new SemesterNo("1");
+    public static final SemesterNo DEFAULT_SEMESTER_NO = SemesterNo.SEMESTER_1;
 
     private String acadYear;
     private String semesterNo;
@@ -33,7 +33,7 @@ public class AppSettings implements Serializable {
     }
 
     public SemesterNo getSemesterNo() {
-        return new SemesterNo(semesterNo);
+        return SemesterNo.findSemesterNo(semesterNo);
     }
 
     public void setAcadYear(String acadYear) {

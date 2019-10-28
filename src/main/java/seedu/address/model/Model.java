@@ -89,12 +89,12 @@ public interface Model {
     /**
      * Returns the App setting's acadYear.
      */
-    public AcadYear getDefaultAcadYear();
+    public AcadYear getAcadYear();
 
     /**
      * Returns the App setting's semesterNo.
      */
-    public SemesterNo getDefaultSemesterNo();
+    public SemesterNo getSemesterNo();
 
     //=========== AddressBook ================================================================================
 

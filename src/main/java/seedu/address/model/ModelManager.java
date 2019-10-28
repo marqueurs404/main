@@ -213,12 +213,12 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public AcadYear getDefaultAcadYear() {
+    public AcadYear getAcadYear() {
         return userPrefs.getAcadYear();
     }
 
     @Override
-    public SemesterNo getDefaultSemesterNo() {
+    public SemesterNo getSemesterNo() {
         return userPrefs.getSemesterNo();
     }
 

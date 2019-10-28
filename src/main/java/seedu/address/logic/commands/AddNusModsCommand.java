@@ -40,12 +40,13 @@ public class AddNusModsCommand extends Command {
             + "Example Link: " + NusModsShareLink.EXAMPLE;
 
     public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule: \n\n";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "Unable to find person";
-    public static final String MESSAGE_MODULE_NOT_FOUND = "Unable to get all module details";
-    public static final String MESSAGE_MODULES_CLASH = "Unable to add modules - there is a clash in the "
-            + "timings between the modules you're adding!";
-    public static final String MESSAGE_EVENTS_CLASH = "Unable to add modules - there is a clash in the "
-            + "timings between the modules you're adding and the events in the person's schedule!";
+    public static final String MESSAGE_FAILURE = "Unable to add modules";
+    public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + ": unable to find person";
+    public static final String MESSAGE_MODULE_NOT_FOUND = MESSAGE_FAILURE + ": unable to get all module details";
+    public static final String MESSAGE_MODULES_CLASH = MESSAGE_FAILURE + ": there's a timing clash "
+            + "between the modules you're adding!";
+    public static final String MESSAGE_EVENTS_CLASH = MESSAGE_FAILURE + ": there's a timing clash"
+            + "between the modules you're adding and some event in the person's schedule!";
 
     private final Name name;
     private final NusModsShareLink link;
@@ -61,8 +62,7 @@ public class AddNusModsCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        //TODO: validate input against model data
-        AcadYear acadYear = model.getDefaultAcadYear();
+        AcadYear acadYear = model.getAcadYear();
 
         Person person = model.findPerson(name);
         if (person == null) {
@@ -85,7 +85,7 @@ public class AddNusModsCommand extends Command {
             } catch (ModuleNotFoundException e) {
                 return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
             } catch (ModuleToEventMappingException e) {
-                return new CommandResult(e.getMessage());
+                return new CommandResult("Unable to add modules: " + e.getMessage());
             }
         }
 

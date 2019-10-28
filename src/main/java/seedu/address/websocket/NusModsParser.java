@@ -36,6 +36,7 @@ import seedu.address.model.module.Title;
 import seedu.address.model.module.Venue;
 import seedu.address.model.module.Weeks;
 import seedu.address.model.module.WeeksType;
+import seedu.address.model.module.exceptions.SemesterNoNotFoundException;
 
 /**
  * Parse data from NusModsApi
@@ -130,7 +131,12 @@ public class NusModsParser {
         requireNonNull(obj);
         requireCompulsoryKeys(obj, "semester", "timetable");
 
-        SemesterNo semesterNo = new SemesterNo(obj.get("semester").toString());
+        SemesterNo semesterNo;
+        try {
+            semesterNo = SemesterNo.findSemesterNo(obj.get("semester").toString());
+        } catch (SemesterNoNotFoundException e) {
+            throw new ParseException("Semester number not found: " + obj.toString());
+        }
 
         ArrayList<Lesson> timetable = new ArrayList<>();
         JSONArray arr = (JSONArray) obj.get("timetable");
@@ -246,7 +252,7 @@ public class NusModsParser {
 
             for (Object semesterNoKey : innerObj.keySet()) {
                 // From key from AcadYear and SemesterNo
-                SemesterNo semesterNo = new SemesterNo(semesterNoKey.toString());
+                SemesterNo semesterNo = SemesterNo.findSemesterNo(semesterNoKey.toString());
                 Map.Entry<AcadYear, SemesterNo> key = Map.entry(acadYear, semesterNo);
                 // Get start date value
                 JSONObject startDateObj = (JSONObject) innerObj.get(semesterNoKey.toString());
