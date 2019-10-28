@@ -20,7 +20,7 @@ public class AppSettings implements Serializable {
 
     public AppSettings() {
         acadYear = DEFAULT_ACAD_YEAR.toString();
-        semesterNo = DEFAULT_SEMESTER_NO.toString();
+        semesterNo = DEFAULT_SEMESTER_NO.semesterNo();
     }
 
     public AppSettings(String acadYear, String semesterNo) {
@@ -56,7 +56,7 @@ public class AppSettings implements Serializable {
         AppSettings o = (AppSettings) other;
 
         return acadYear.equals(o.getAcadYear().toString())
-                && semesterNo.equals(o.getSemesterNo().toString());
+                && semesterNo.equals(o.getSemesterNo().semesterNo());
     }
 
     @Override
