@@ -4,13 +4,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 class UrlUtilTest {
+
+    @Test
+    void generateUrl() throws MalformedURLException {
+        URL actualUrl = UrlUtil.generateUrl("https://www.google.com.sg");
+        URL expectedUrl = new URL("https://www.google.com.sg");
+        assertEquals(actualUrl, expectedUrl);
+    }
+
+    @Test
+    void splitQuery() throws UnsupportedEncodingException {
+        URL url = UrlUtil.generateUrl("https://www.google.com.sg?key1=value1&key2=value2");
+        Map<String, String> mapping = UrlUtil.splitQuery(url);
+        assertEquals("value1", mapping.get("key1"));
+        assertEquals("value2", mapping.get("key2"));
+    }
 
     @Test
     void sanitizeApiKey() {
@@ -44,6 +63,13 @@ class UrlUtilTest {
         String expectedUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial"
                 + "&origins=LT17|LT13|LT14|&destinations=LT17|LT13|LT14|&key=";
         assertEquals(UrlUtil.generateGmapsDistanceMatrixUrl(arg, arg), expectedUrl);
+    }
+
+    @Test
+    void generateGmapsStaticImage() {
+        String expectedUrl = "https://maps.googleapis.com/maps/api/staticmap?size=500x500&zoom=17"
+                + "&markers=color:blue|size:large|label:L|NUS_LT17&center=NUS_LT17&key=&";
+        assertEquals(UrlUtil.generateGmapsStaticImage("NUS_LT17"), expectedUrl);
     }
 }
 

@@ -4,12 +4,12 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.AppSettings;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.display.detailwindow.ClosestCommonLocationData;
 import seedu.address.model.display.detailwindow.DetailWindowDisplay;
 import seedu.address.model.display.detailwindow.DetailWindowDisplayType;
 import seedu.address.model.display.sidepanel.SidePanelDisplay;
@@ -330,7 +330,7 @@ public interface Model {
      * @param locationNameList ArrayList of venues object
      * @return
      */
-    Hashtable<String, Object> getClosestLocationData(ArrayList<String> locationNameList);
+    ClosestCommonLocationData getClosestLocationData(ArrayList<String> locationNameList);
     /**
      * Returns the common closest location.
      * @param locationNameList ArrayList of string object

@@ -1,5 +1,7 @@
 package seedu.address.logic.commands.suggestions;
 
+import static seedu.address.commons.util.CollectionUtil.createUnmodifiableObservableList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.FindGroupCommand;
 import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.logic.commands.ScheduleCommand;
+import seedu.address.logic.commands.ShowCommand;
 import seedu.address.logic.commands.ShowNusModCommand;
 import seedu.address.logic.commands.suggestions.stateless.GroupNameSuggester;
 import seedu.address.logic.parser.ArgumentList;
@@ -45,12 +48,9 @@ public abstract class Suggester {
             Map.entry(FindGroupCommand.COMMAND_WORD, GroupNameSuggester.class),
             Map.entry(FindPersonCommand.COMMAND_WORD, FindPersonCommandSuggester.class),
             Map.entry(ScheduleCommand.COMMAND_WORD, GroupNameSuggester.class),
+            Map.entry(ShowCommand.COMMAND_WORD, ShowCommandSuggester.class),
             Map.entry(ShowNusModCommand.COMMAND_WORD, ShowNusModCommandSuggester.class)
     );
-
-    protected static <T> ObservableList<T> createUnmodifiableObservableList(final List<T> list) {
-        return FXCollections.unmodifiableObservableList(FXCollections.observableList(list));
-    }
 
     /**
      * Creates a {@link Suggester} based on the given {@code commandWord}. (e.g. {@link AddToGroupCommand#COMMAND_WORD})
