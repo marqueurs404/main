@@ -50,7 +50,7 @@ class CacheTest {
     @Test
     void loadModuleList() {
         ModuleList moduleList = Cache.loadModuleList().get();
-        assertEquals(moduleList.toString(), "AY2019/2020 CS2103T Software Engineering\n");
+        assertTrue(moduleList.toString().contains("AY2019/2020 CS2103T Software Engineering\n"));
     }
 
     @Test
