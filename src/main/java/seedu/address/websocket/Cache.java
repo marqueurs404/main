@@ -2,12 +2,17 @@ package seedu.address.websocket;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.ConnectException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -35,10 +40,24 @@ import seedu.address.websocket.util.UrlUtil;
  * Cache class handles whether to get external data from storage data or api.
  */
 public class Cache {
+    private static final String writablePath;
     private static final Logger logger = LogsCenter.getLogger(Cache.class);
+    static {
+        final URL url = Cache.class.getResource(CacheFileNames.CACHE_FOLDER_PATH);
+        if (url != null && url.getProtocol().equals("jar")) {
+            // we're running from a JAR
+            writablePath = Paths.get(System.getProperty("java.io.tmpdir"), "timebook").toString();
+        } else {
+            //we're running from file/IDE
+            writablePath = "src/main/resources/";
+        }
+        logger.info("Storing cached data in " + writablePath);
+    }
     private static NusModsApi api = new NusModsApi(AppSettings.DEFAULT_ACAD_YEAR);
     private static Optional<Object> gmapsPlaces = load(CacheFileNames.GMAPS_PLACES_PATH);
+
     private static Optional<Object> gmapsDistanceMatrix = load(CacheFileNames.GMAPS_DISTANCE_MATRIX_PATH);
+
     /**
      * Save json to file in cache folder.
      * @param obj obj to save
@@ -48,7 +67,7 @@ public class Cache {
         requireNonNull(obj);
         requireNonNull(pathName);
 
-        Path fullPath = Path.of(pathName);
+        Path fullPath = Path.of(writablePath, pathName);
         try {
             FileUtil.createIfMissing(fullPath);
             JsonUtil.saveJsonFile(obj, fullPath);
@@ -91,6 +110,27 @@ public class Cache {
     }
 
     /**
+     * Check if file in system temporary directory before checking JAR resources.
+     */
+    private static Reader loadFromCacheBeforeResources(final String path) {
+        Reader reader;
+        final String cachePath = Path.of(writablePath, path).toString();
+
+        try {
+            reader = new FileReader(cachePath);
+        } catch (FileNotFoundException e) {
+            final InputStream resourceStream = Cache.class.getResourceAsStream(path);
+            if (resourceStream == null) {
+                return null;
+            }
+
+            reader = new InputStreamReader(resourceStream);
+        }
+        return reader;
+    }
+
+
+    /**
      * This method is used to load a previously called API response
      * @param key
      * @param filePath
@@ -103,7 +143,12 @@ public class Cache {
         JSONParser parser;
         parser = new JSONParser();
         Object result = null;
-        try (Reader reader = new FileReader(filePath)) {
+        Reader reader = loadFromCacheBeforeResources(filePath);
+        if (reader == null) {
+            return result.toString();
+        }
+
+        try {
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             result = jsonObject.get(key);
         } catch (IOException | org.json.simple.parser.ParseException e) {
@@ -120,8 +165,14 @@ public class Cache {
     private static Optional<Object> load(String pathName) {
         requireNonNull(pathName);
 
-        Path fullPath = Path.of(pathName);
-        return SimpleJsonUtil.readJsonFile(fullPath);
+        Path fullPath = Path.of(writablePath, pathName);
+        //check if tempdir has file, if found then load from it, else load from resources
+        Optional<Object> objOptional = SimpleJsonUtil.readJsonFile(fullPath);
+        if (objOptional.isEmpty()) {
+            fullPath = Path.of(Cache.class.getResource(CacheFileNames.CACHE_FOLDER_PATH).getPath(), pathName);
+            objOptional = SimpleJsonUtil.readJsonFile(fullPath);
+        }
+        return objOptional;
     }
 
     /**
