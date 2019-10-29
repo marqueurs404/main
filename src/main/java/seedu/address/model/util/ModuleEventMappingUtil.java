@@ -8,12 +8,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import seedu.address.logic.commands.exceptions.ModuleToEventMappingException;
 import seedu.address.model.module.Exam;
 import seedu.address.model.module.Holidays;
 import seedu.address.model.module.Lesson;
 import seedu.address.model.module.LessonNo;
+import seedu.address.model.module.LessonType;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.Semester;
 import seedu.address.model.module.SemesterNo;
@@ -37,22 +39,24 @@ public class ModuleEventMappingUtil {
      * @return an Event based on an NUS module
      */
     public static Event mapModuleToEvent(Module module, LocalDate startAcadSemDate, SemesterNo semesterNo,
-                  List<LessonNo> lessonNos, Holidays holidays) throws ModuleToEventMappingException {
+             Map<LessonType, LessonNo> lessonTypesNosMap, Holidays holidays) throws ModuleToEventMappingException {
         requireNonNull(module);
         requireNonNull(startAcadSemDate);
         requireNonNull(semesterNo);
-        requireNonNull(lessonNos);
+        requireNonNull(lessonTypesNosMap);
         requireNonNull(holidays);
 
         Semester semester = module.getSemester(semesterNo);
         ArrayList<Lesson> lessons = new ArrayList<>();
         ArrayList<Timeslot> timeslots = new ArrayList<>();
 
-        if (lessonNos.isEmpty()) { //no lesson numbers given
+        if (lessonTypesNosMap.isEmpty()) { //no lesson types-numbers given
             throw new ModuleToEventMappingException(MESSAGE_MISSING_LESSONS);
         }
-        for (LessonNo lessonNo : lessonNos) {
-            List<Lesson> lessonsFound = semester.findLessons(lessonNo);
+        for (Map.Entry<LessonType, LessonNo> entry : lessonTypesNosMap.entrySet()) {
+            LessonType lessonType = entry.getKey();
+            LessonNo lessonNo = entry.getValue();
+            List<Lesson> lessonsFound = semester.findLessons(lessonType, lessonNo);
             if (lessonsFound.isEmpty()) { //module does not have a matching lesson number
                 throw new ModuleToEventMappingException(MESSAGE_INVALID_LESSONS);
             }

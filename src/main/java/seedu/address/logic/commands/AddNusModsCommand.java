@@ -19,6 +19,7 @@ import seedu.address.model.display.sidepanel.SidePanelDisplayType;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.Holidays;
 import seedu.address.model.module.LessonNo;
+import seedu.address.model.module.LessonType;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.ModuleCode;
 import seedu.address.model.module.ModuleId;
@@ -47,7 +48,7 @@ public class AddNusModsCommand extends Command {
     public static final String MESSAGE_MODULE_NOT_FOUND = MESSAGE_FAILURE + ": unable to get all module details";
     public static final String MESSAGE_MODULES_CLASH = MESSAGE_FAILURE + ": there's a timing clash "
             + "between the modules you're adding!";
-    public static final String MESSAGE_EVENTS_CLASH = MESSAGE_FAILURE + ": there's a timing clash"
+    public static final String MESSAGE_EVENTS_CLASH = MESSAGE_FAILURE + ": there's a timing clash "
             + "between the modules you're adding and some event in the person's schedule!";
 
     private final Name name;
@@ -78,7 +79,7 @@ public class AddNusModsCommand extends Command {
 
         // translate module to event
         ArrayList<Event> eventsToAdd = new ArrayList<>();
-        for (Map.Entry<ModuleCode, List<LessonNo>> entry : link.moduleLessonsMap.entrySet()) {
+        for (Map.Entry<ModuleCode, Map<LessonType, LessonNo>> entry : link.moduleLessonsMap.entrySet()) {
             ModuleCode moduleCode = entry.getKey();
             ModuleId moduleId = new ModuleId(acadYear, moduleCode);
             try {

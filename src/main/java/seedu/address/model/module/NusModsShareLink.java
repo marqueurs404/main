@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.module.exceptions.LessonTypeNotFoundException;
 import seedu.address.model.module.exceptions.SemesterNoNotFoundException;
 import seedu.address.websocket.util.UrlUtil;
 
@@ -36,6 +38,7 @@ public class NusModsShareLink {
             + "An example link: " + EXAMPLE + "\n";
 
     public static final Set<String> SHORT_SEMESTER_NAMES = SemesterNo.getShortSemesterNames();
+    public static final Set<String> LESSON_TYPE_ABBREVIATIONS = LessonType.getAbbreviations();
 
     public static final String SEMESTER_REGEX = "(" + String.join("|", SHORT_SEMESTER_NAMES) + ")";
     public static final String VALIDATION_REGEX = "^https://nusmods.com/timetable/"
@@ -43,7 +46,7 @@ public class NusModsShareLink {
 
     public final String value;
     public final SemesterNo semesterNo;
-    public final Map<ModuleCode, List<LessonNo>> moduleLessonsMap;
+    public final Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap;
 
     public NusModsShareLink(String link) throws ParseException {
         requireNonNull(link);
@@ -72,7 +75,7 @@ public class NusModsShareLink {
             if (queryMap.isEmpty()) { // no key-value pairs found in query string.
                 throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
             }
-            Map<ModuleCode, List<LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
+            Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
             for (Map.Entry<String, String> entry : queryMap.entrySet()) {
                 ModuleCode moduleCode = ParserUtil.parseModuleCode(entry.getKey());
                 if (StringUtil.isNullOrEmpty(entry.getValue())) {
@@ -80,16 +83,24 @@ public class NusModsShareLink {
                     // has no lessons.
                     continue;
                 }
-                String[] lessons = entry.getValue().split(",");
-                List<LessonNo> lessonsNos = Arrays.stream(lessons)
-                        .map(l -> l.split(":")[1])
-                        .map(LessonNo::new)
-                        .collect(Collectors.toList());
-                if (lessonsNos.isEmpty()) { // query value improperly formatted -> no potential lessonNos found.
+                String[] lessonTypeNoPairsArr = entry.getValue().split(",");
+                Map<LessonType, LessonNo> lessonTypesNosMap = new LinkedHashMap<>();
+                for (int i = 0; i < lessonTypeNoPairsArr.length; i++) {
+                    String[] typeNoPair = lessonTypeNoPairsArr[i].split(":");
+                    LessonType lType;
+                    try {
+                        lType = LessonType.findLessonType(typeNoPair[0]);
+                    } catch (LessonTypeNotFoundException e) {
+                        throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
+                    }
+                    LessonNo lNo = new LessonNo(typeNoPair[1]);
+                    lessonTypesNosMap.put(lType, lNo);
+                }
+                if (lessonTypesNosMap.isEmpty()) { // no lesson type-number pairs parsed
                     throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
                 }
 
-                moduleLessonsMap.put(moduleCode, lessonsNos);
+                moduleLessonsMap.put(moduleCode, lessonTypesNosMap);
             }
 
             value = link;
