@@ -8,7 +8,6 @@ import static seedu.address.model.util.ModuleEventMappingUtil.mapModuleToEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import seedu.address.logic.commands.exceptions.CommandException;

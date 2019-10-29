@@ -31,8 +31,6 @@ import seedu.address.model.person.schedule.Venue;
 public class ModuleEventMappingUtil {
     public static final String MESSAGE_MISSING_LESSONS = "missing class numbers in input!";
     public static final String MESSAGE_INVALID_LESSONS = "invalid class number in input!";
-    private static final int WEEK_LENGTH = 7;
-
 
     /**
      * Converts a {@code Module} to an {@code Event}.
@@ -128,15 +126,22 @@ public class ModuleEventMappingUtil {
             while (!tempDate.isAfter(lastLessonDate)) {
                 weekNumbers.add(curr);
                 curr += weekInterval;
-                tempDate = tempDate.plusDays(WEEK_LENGTH * weekInterval);
+                tempDate = tempDate.plusWeeks(weekInterval);
             }
         }
         //generate timeslots
         for (int weekNo : weekNumbers) {
-            LocalDateTime timeslotStart = firstLessonStart.plusDays(WEEK_LENGTH * (weekNo - 1));
-            LocalDateTime timeslotEnd = firstLessonEnd.plusDays(WEEK_LENGTH * (weekNo - 1));
+            LocalDateTime timeslotStart = firstLessonStart.plusWeeks(weekNo - 1);
+            LocalDateTime timeslotEnd = firstLessonEnd.plusWeeks(weekNo - 1);
 
-            boolean isHoliday = holidayDates.stream().anyMatch(d -> timeslotStart.toLocalDate().isEqual(d));
+            // if weekNo > 6, +1 for recess week
+            if (weekNo > 6) {
+                timeslotStart = timeslotStart.plusWeeks(1);
+                timeslotEnd = timeslotEnd.plusWeeks(1);
+            }
+            // don't generate on holidays.
+            final LocalDateTime finalTimeslotStart = timeslotStart; // variable used in lambda should be final.
+            boolean isHoliday = holidayDates.stream().anyMatch(d -> finalTimeslotStart.toLocalDate().isEqual(d));
             if (isHoliday) {
                 continue;
             }
