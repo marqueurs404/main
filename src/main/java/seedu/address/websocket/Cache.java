@@ -2,14 +2,11 @@ package seedu.address.websocket;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.ConnectException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -131,7 +128,7 @@ public class Cache {
 
         Path fullPath = Path.of(writablePath, filePath);
         //attempt to load from tempdir.
-         Optional<Object> objOptional = SimpleJsonUtil.readJsonFile(fullPath);
+        Optional<Object> objOptional = SimpleJsonUtil.readJsonFile(fullPath);
         if (objOptional.isEmpty()) { //if failed, attempt to load from JAR resources.
             objOptional = loadFromResources(filePath);
         }
