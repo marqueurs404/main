@@ -21,7 +21,7 @@ Our team is still working on the User Guide. Keep a look out for more cool and e
 
 == Introduction
 
-Thank you for checking out TimeBook! TimeBook is a desktop application that is morphed from AddressBook Level 3 (AB3). TimeBook is a scheduler application that aims to help busy NUS undergraduates keep track of the schedules of the user and his or her friends. It also can find the common free time and venues among the user and his or her friends. TimeBook will have the following features:
+Thank you for checking out TimeBook! TimeBook is a desktop application that is morphed from AddressBook Level 3 (AB3). TimeBook is a scheduling application that aims to help busy NUS undergraduates keep track of the schedules of the user and his or her friends. It also can find the common free time and venues among the user and his or her friends. TimeBook will have the following features:
 
 .  A graphical user interface (GUI) but most of the interactions with the application would happen using command line interface (CLI).
 .  Allows users to add the schedules of his or her friends and organise them into groups.
@@ -31,12 +31,12 @@ Thank you for checking out TimeBook! TimeBook is a desktop application that is m
 
 == Understanding this guide
 === Basic Information
-This guide is a explains how you can use *TimeBook* to the fullest extent to assist you to plan for your group's meeting.
+This guide explains how you can use *TimeBook* to the fullest extent to assist you to plan for your group's meeting.
 
-You can find the steps needed to start scheduling group activities with your friends or loved ones in the quick start and general
-*lifecycle* usage of our application. If you happen to stumble upon some difficulties, our *Frequently Asked Questions* (FAQ) is
-here to address that. If you are an experienced *Command Line Interface (CLI)* user, you can hope right into using the application by
-looking at our *Command Summary*. Otherwise, take a look at the *Unexperienced CLI user* section to obtain more information on how
+You can find the steps needed to start scheduling group activities with your friends or loved ones in the <<Quick Start, *quick start section*>> and general
+*lifecycle* usage of our application. If you happen to stumble upon some difficulties, our <<FAQ,*Frequently Asked Questions*>> (FAQ) is
+here to address that. If you are an experienced *Command Line Interface (CLI)* user, you can hop right into using the application by
+looking at our <<Command Summary, *Command Summary*>>. Otherwise, take a look at the <<Inexperienced CLI user, *Inexperienced CLI User*>> section to obtain more information on how
 to use our application.
 
 We have used the following symbols to help you better understand our application usage. (For now we have not picked our symbols yet.)
@@ -71,13 +71,13 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 .  Refer to <<Features>> for details of each command.
 
-== Unexperienced CLI user
+== Inexperienced CLI User
 
 Unlike most applications, where you use your mouse to interact with the application such as scrolling and clicking, our application
 mostly use the *Command Line Interface*. Most of the time, you would be interacting with the application through typing commands in the
 command box of the application.
 
-You can play around with the commands in <<Command Summary>> to get yourself warmed up.
+You can play around with the commands in <<Command Summary, *Command Summary*>> to get yourself warmed up.
 
 
 [[Features]]
