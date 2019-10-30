@@ -227,6 +227,8 @@ image::showpersonresult.png[]
 Shows a list of all persons in the TimeBook. +
 Format: `list`
 
+=== Schedule Management
+
 ==== Add Event to Schedule: `addevent`
 
 Adds an event into the schedule of a person in the TimeBook. Only schedules without clashes between time slots can be added to the TimeBook.
@@ -234,7 +236,6 @@ Can be used to mark a person as unavailable either on one-off dates or on a part
 Format:
 
 * `addevent n/NAME e/EVENT_NAME t/DATETIME` +
-* `addevent n/NAME c/NUS_MOD_LINK`
 
 Examples:
 
@@ -243,11 +244,15 @@ Examples:
 
 ==== Add Module to Schedule: `addmod`
 
-Adds an NUS module as an event to a person's schedule in TimeBook. It checks and ensures classes are available for the module in the academic year and semester before adding to the person's schedule. Default values for `ACADEMIC_YEAR` is 2019/2020 and `SEMESTER` is 1.
+Adds an NUS module as an event to a person's schedule in TimeBook.
 
-Format:
+Format: `addmod n/NAME m/MODULE_CODE cl/CLASS_1_TYPE:CLASS_1_NUMBER,CLASS_2_TYPE:CLASS_2_NUMBER,...`
 
-* `addmod n/NAME m/MODULE_CODE class/CLASS_NUMBERS(comma-separated) [ay/ACADEMIC_YEAR] [s/SEMESTER]` +
+****
+* Currently supports academic year 2019/2020 and semester 1 only.
+* Just like adding a normal event via `addevent`, the module will only be added if the specified classes does not clash with any events in the person's schedule.
+****
+
 
 Examples:
 
@@ -255,18 +260,42 @@ Examples:
 * `addmod n/John m/CS2103T class/G01,T5 ay/2018/2019`
 * `addmod n/John m/CS2103T class/G01,T5 ay/2019/2020 s/1`
 
+Step-By-Step:
+
+. Add a module's classes easily by typing `addmod` into the command box and follow the format as shown above, then press btn:[Enter] to execute it.
+
+image::nusmods/addmod1.png[]
+
+. If you manage to successfully add the module and its classes into the person's schedule, you will see the person's schedule appearing with the newly added timeslots:
+
+image::nusmods/addmod2.png[]
+
 ==== Add Modules via NUSMods Link: `addmods`
 
-Adds NUS modules given the NUSMods share link, as events to a person's schedule in TimeBook.
+Already have your modules timetable on NUSMods? Great, you can easily add your modules timetable into TimeBook with the `addmods` command!
 
-Format:
+Format: `addmods n/NAME l/NUSMODS_SHARE_LINK`
 
-* `addmods n/NAME l/NUSMODS_SHARE_LINK` +
+****
+* Reads the specified `NUSMODS_SHARE_LINK` to get the modules and classes, then adds the classes into the person's schedule.
+* Currently supports academic year 2019/2020 and semester 1 only.
+* WARNING: Just like adding a normal event via `addevent`, the module will only be added if the specified classes does not clash with any events in the person's schedule.
+****
 
 Examples:
 
 * `addmods n/John l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
 * `addmods n/Bob l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+
+Step-By-Step:
+
+. Add an NUSMods timetable easily by typing `addmods` into the command box and follow the format as shown above, then press btn:[Enter] to execute it.
+
+image::nusmods/addmods1.png[]
+
+. If you manage to successfully add all the modules and their respective classes into the person's schedule, you will see the person's schedule appearing with the newly added timeslots:
+
+image::nusmods/addmods2.png[]
 
 === Group Management
 
