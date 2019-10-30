@@ -15,7 +15,6 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.AcadYear;
@@ -185,7 +184,7 @@ public class NusModsParser {
         Venue venue = new Venue(obj.get("venue").toString());
         try {
             return new Lesson(lessonNo, startTime, endTime, weeks, lessonType, day, venue);
-        } catch (IllegalValueException e) {
+        } catch (IllegalArgumentException e) {
             throw new ParseException(e.getMessage());
         }
     }
@@ -238,7 +237,7 @@ public class NusModsParser {
 
         try {
             return new Weeks(weekNumbers, startDate, endDate, weekInterval, type);
-        } catch (IllegalValueException e) {
+        } catch (IllegalArgumentException e) {
             throw new ParseException(e.getMessage());
         }
     }

@@ -1,9 +1,9 @@
 package seedu.address.model.module;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import seedu.address.commons.exceptions.IllegalValueException;
 
 /**
  * Weeks of the {@code Lesson}, used to represent the schedule of a lesson.
@@ -16,9 +16,14 @@ public class Weeks {
     private int weekInterval;
 
     public Weeks(List<Integer> weekNumbers, LocalDate startDate,
-                 LocalDate endDate, int weekInterval, WeeksType type) throws IllegalValueException {
+                 LocalDate endDate, int weekInterval, WeeksType type) {
+        requireNonNull(weekNumbers);
+        requireNonNull(startDate);
+        requireNonNull(endDate);
+        requireNonNull(weekInterval);
+        requireNonNull(type);
         if (startDate.isAfter(endDate)) { //DEFENSIVE CODE
-            throw new IllegalValueException("Start date cannot be after end date.");
+            throw new IllegalArgumentException("Start date cannot be after end date.");
         }
         this.weekNumbers = weekNumbers;
         this.startDate = startDate;
