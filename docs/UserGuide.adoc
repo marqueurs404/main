@@ -318,19 +318,20 @@ Examples:
 
 === Advanced Features
 
-==== Show Module: `showmod`
-
-Shows the schedule of available classes for the module in the academic year and semester. Default values for `ACADEMIC_YEAR` is 2019/2020 and `SEMESTER` is 1.
-
-Format:
-
-* `showmod m/MODULE_CODE [ay/ACADEMIC_YEAR] [s/SEMESTER]`
-
-Examples:
-
-* `showmod m/CS2103T`
-* `showmod m/GEQ1000 ay/2019/2020`
-* `showmod m/CS3230 ay/2019/2020 s/2`
+// TODO: UI not implemented for this command yet.
+//==== Show Module: `showmod`
+//
+//Shows the schedule of available classes for the module in the academic year and semester. Default values for `ACADEMIC_YEAR` is 2019/2020 and `SEMESTER` is 1.
+//
+//Format:
+//
+//* `showmod m/MODULE_CODE [ay/ACADEMIC_YEAR] [s/SEMESTER]`
+//
+//Examples:
+//
+//* `showmod m/CS2103T`
+//* `showmod m/GEQ1000 ay/2019/2020`
+//* `showmod m/CS3230 ay/2019/2020 s/2`
 
 ==== Export VR (Visual Representation): `export-vr`
 
