@@ -26,7 +26,7 @@ public class GmapsJsonUtils {
                 Long value;
                 JSONObject currElement = (JSONObject) elements.get(j);
                 if (((String) currElement.get("status")).equals("OK")) {
-                    JSONObject duration = (JSONObject) currElement.get("duration");
+                    JSONObject duration = (JSONObject) currElement.get("distance");
                     value = (Long) duration.get("value");
                 } else {
                     value = null;
@@ -36,6 +36,12 @@ public class GmapsJsonUtils {
             distanceMatrixArrayList.add(currVertex);
         }
         return distanceMatrixArrayList;
+    }
+
+    public static String getPlaceId(JSONObject apiResponse) {
+        JSONArray candidates = (JSONArray) apiResponse.get("candidates");
+        JSONObject firstCandidate = (JSONObject) candidates.get(0);
+        return (String) firstCandidate.get("place_id");
     }
 
     /**

@@ -8,13 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.util.CollectionUtil;
-import seedu.address.logic.parser.AddressBookParser;
-import seedu.address.logic.parser.AddressBookParser.CommandTokens;
 import seedu.address.logic.parser.ArgumentList;
 import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.CommandArgument;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.SuggestingCommandUtil;
+import seedu.address.logic.parser.TimeBookParser;
+import seedu.address.logic.parser.TimeBookParser.CommandTokens;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.ui.SuggestingCommandBox.SuggestionLogic;
@@ -25,11 +25,25 @@ import seedu.address.ui.SuggestingCommandBox.SuggestionLogic;
 public class SuggestionLogicManager implements SuggestionLogic {
     private static final ObservableList<String> EMPTY_LIST = FXCollections.emptyObservableList();
 
-    private final FilteredList<String> commandSuggestions = new FilteredList<>(SuggestingCommandUtil.getCommandWords());
+    private final FilteredList<String> commandSuggestions;
     private final Model model;
 
     public SuggestionLogicManager(final Model model) {
+        this(Objects.requireNonNull(model), SuggestingCommandUtil.getCommandWords());
+    }
+
+    public SuggestionLogicManager(final Model model, final List<String> commandWords) {
         this.model = Objects.requireNonNull(model);
+        Objects.requireNonNull(commandWords);
+
+        final ObservableList<String> observableListCommandWords;
+        if (commandWords instanceof ObservableList) {
+            observableListCommandWords = (ObservableList<String>) commandWords;
+        } else {
+            observableListCommandWords = FXCollections.observableList(commandWords);
+        }
+
+        this.commandSuggestions = new FilteredList<>(observableListCommandWords);
     }
 
     private static boolean isCaretWithinCommandWordSection(final CommandTokens commandTokens, final int caretPosition) {
@@ -42,7 +56,7 @@ public class SuggestionLogicManager implements SuggestionLogic {
 
         final CommandTokens commandTokens;
         try {
-            commandTokens = AddressBookParser.tokenizeCommand(commandText);
+            commandTokens = TimeBookParser.tokenizeCommand(commandText);
         } catch (ParseException e) {
             return EMPTY_LIST;
         }
@@ -78,7 +92,7 @@ public class SuggestionLogicManager implements SuggestionLogic {
 
         final CommandTokens commandTokens;
         try {
-            commandTokens = AddressBookParser.tokenizeCommand(commandText);
+            commandTokens = TimeBookParser.tokenizeCommand(commandText);
         } catch (ParseException e) {
             return SelectionResult.of(commandText, caretPosition);
         }

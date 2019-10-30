@@ -2,14 +2,15 @@ package seedu.address.logic.internal.gmaps;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.exceptions.TimeBookInvalidLocation;
 import seedu.address.commons.exceptions.TimeBookInvalidState;
 import seedu.address.model.gmaps.Location;
 import seedu.address.websocket.Cache;
-import seedu.address.websocket.GmapsApi;
 
 /**
  * This class is used to get nus venues
@@ -17,8 +18,8 @@ import seedu.address.websocket.GmapsApi;
 public class ProcessVenues {
     private JSONArray venuesNusMods;
     private ArrayList<Location> venues = new ArrayList<>();
-    private transient GmapsApi gmapsApi = new GmapsApi();
     private SanitizeLocation sanitizeLocation = new SanitizeLocation();
+    private final Logger logger = LogsCenter.getLogger(this.getClass());
 
     public ProcessVenues(){
     }
@@ -38,15 +39,23 @@ public class ProcessVenues {
     /**
      * This method is used to process the venues with the latest information from NUSmods and Google Maps
      * @return
-     * @throws ConnectException
      */
-    public ProcessVenues process() throws ConnectException {
+    public ProcessVenues process() {
         ProcessVenues processVenuesWNusMods = getVenuesJsonArray();
         ProcessVenues processVenuesWVenues = processVenuesWNusMods.populateVenues();
         return processVenuesWVenues;
     }
 
-    public ArrayList<String> getValidLocationList() {
+    /**
+     * Gnerate all static images
+     * @return
+     */
+
+    public void generateImages() {
+        sanitizeLocation.generateImage();
+    }
+
+    public ArrayList<Location> getValidLocationList() {
         return sanitizeLocation.getValidLocationList();
     }
 
@@ -55,15 +64,16 @@ public class ProcessVenues {
      * @return
      * @throws ConnectException
      */
-    private ProcessVenues populateVenues() throws ConnectException {
+    private ProcessVenues populateVenues() {
         if (venuesNusMods == null) {
             throw new IllegalStateException("Cannot call getLocation before calling get"
                     + "getVenuesJsonArray");
         } else {
             for (int i = 0; i < venuesNusMods.size(); i++) {
-                System.out.println("Processing " + venuesNusMods.get(i) + " " + i + "/" + venuesNusMods.size());
                 Location currLocation = getLocation(i);
-                venues.add(currLocation);
+                if (currLocation != null) {
+                    venues.add(currLocation);
+                }
             }
         }
         return new ProcessVenues(venuesNusMods, venues, sanitizeLocation);
@@ -74,7 +84,7 @@ public class ProcessVenues {
         return new ProcessVenues(currVenuesNusMod, venues, sanitizeLocation);
     }
 
-    private Location getLocation(int i) throws ConnectException {
+    private Location getLocation(int i) {
         if (venuesNusMods == null) {
             throw new IllegalStateException("Cannot call getLocation before calling get"
                    + "getVenuesJsonArray");
@@ -82,11 +92,9 @@ public class ProcessVenues {
             String locationName = (String) venuesNusMods.get(i);
             Location currLocation = new Location(locationName);
             try {
-                String validLocation = sanitizeLocation.sanitize(locationName);
-                currLocation.setValidLocation(validLocation);
-                System.out.println(locationName + " identified as " + validLocation);
+                currLocation = sanitizeLocation.sanitize(locationName);
             } catch (TimeBookInvalidLocation e) {
-                System.out.println(e.getMessage());
+                logger.warning("Cannot get location for " + locationName);
             }
             return currLocation;
         }

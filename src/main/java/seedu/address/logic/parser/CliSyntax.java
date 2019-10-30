@@ -6,6 +6,7 @@ package seedu.address.logic.parser;
 public class CliSyntax {
 
     /* Prefix definitions */
+    public static final Prefix PREFIX_FREETIMESLOT_ID = new Prefix("i/");
     public static final Prefix PREFIX_NAME = new Prefix("n/");
     public static final Prefix PREFIX_PHONE = new Prefix("p/");
     public static final Prefix PREFIX_EMAIL = new Prefix("em/");
@@ -17,7 +18,7 @@ public class CliSyntax {
     public static final Prefix PREFIX_SEMESTER = new Prefix("s/");
     public static final Prefix PREFIX_ACAD_YEAR = new Prefix("ay/");
     public static final Prefix PREFIX_MODULE_CODE = new Prefix("m/");
-    public static final Prefix PREFIX_LESSON_NOS = new Prefix("class/");
+    public static final Prefix PREFIX_LESSON_TYPE_AND_NUM = new Prefix("cl/");
     public static final Prefix PREFIX_EVENTNAME = new Prefix("e/");
     public static final Prefix PREFIX_GROUPNAME = new Prefix("g/");
     public static final Prefix PREFIX_TIMING = new Prefix("t/");

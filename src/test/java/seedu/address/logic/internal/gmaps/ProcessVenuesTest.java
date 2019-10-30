@@ -5,14 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.net.ConnectException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.TimeBookInvalidState;
+import seedu.address.commons.util.FileUtil;
 import seedu.address.model.gmaps.Location;
+import seedu.address.websocket.Cache;
 
 class ProcessVenuesTest {
     private ProcessVenues processVenues;
@@ -22,25 +24,40 @@ class ProcessVenuesTest {
     }
 
     @Test
-    void getLocations() throws ConnectException, TimeBookInvalidState {
+    void getLocations() throws TimeBookInvalidState {
         assertThrows(TimeBookInvalidState.class, () -> processVenues.getLocations());
         ProcessVenues newProcessVenues = processVenues.process();
         Location lt17 = new Location("LT17");
         lt17.setValidLocation("NUS_LT17");
+        lt17.setPlaceId("ChIJBeHqfnAb2jERL1OoMUzA7yE");
         assertTrue(newProcessVenues.getLocations().contains(lt17));
     }
 
     @Test
-    void process() throws ConnectException, TimeBookInvalidState {
+    void process() throws TimeBookInvalidState {
         ProcessVenues newProcessVenues = processVenues.process();
         assertNotNull(newProcessVenues.getLocations());
         assertNotNull(newProcessVenues.getValidLocationList());
     }
 
     @Test
-    void getValidLocationList() throws ConnectException {
+    void getValidLocationList() {
         assertEquals(processVenues.getValidLocationList(), new ArrayList<>());
         ProcessVenues newProcessVenues = processVenues.process();
-        assertTrue(newProcessVenues.getValidLocationList().contains("NUS_LT17"));
+        Location lt17 = new Location("NUS_LT17");
+        lt17.setValidLocation("NUS_LT17");
+        lt17.setPlaceId("ChIJBeHqfnAb2jERL1OoMUzA7yE");
+        assertTrue(newProcessVenues.getValidLocationList().contains(lt17));
+    }
+
+    @Test
+    void imageSanityCheck() {
+        processVenues.process();
+        ArrayList<Location> validLocationList = processVenues.getValidLocationList();
+        for (int i = 0; i < validLocationList.size(); i++) {
+            String currValidLocation = validLocationList.get(i).getValidLocation();
+            String path = Cache.imagePath(currValidLocation);
+            assertTrue(FileUtil.isFileExists(Path.of(path)));
+        }
     }
 }

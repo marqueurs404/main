@@ -7,11 +7,12 @@ import java.util.ArrayList;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.display.detailwindow.DetailWindowDisplayType;
-import seedu.address.model.display.detailwindow.WeekSchedule;
+import seedu.address.model.display.detailwindow.PersonSchedule;
+import seedu.address.model.display.schedulewindow.ScheduleWindowDisplayType;
 import seedu.address.model.display.sidepanel.SidePanelDisplayType;
 import seedu.address.model.group.Group;
 import seedu.address.model.group.GroupName;
+import seedu.address.model.group.exceptions.GroupNotFoundException;
 
 /**
  * Gives the schedule for the week of a group.
@@ -32,20 +33,23 @@ public class ScheduleCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        Group group = model.findGroup(groupName);
-        if (group == null) {
+
+        Group group;
+        try {
+            group = model.findGroup(groupName);
+        } catch (GroupNotFoundException e) {
             return new CommandResult(MESSAGE_FAILURE);
         }
 
         // update main window
-        model.updateDetailWindowDisplay(group.getGroupName(), LocalDateTime.now(), DetailWindowDisplayType.NONE);
+        model.updateScheduleWindowDisplay(group.getGroupName(), LocalDateTime.now(), ScheduleWindowDisplayType.NONE);
 
         // update side panel
-        model.updateSidePanelDisplay(SidePanelDisplayType.GROUPS);
+        model.updateSidePanelDisplay(SidePanelDisplayType.GROUP);
 
-        ArrayList<WeekSchedule> schedules = model.getDetailWindowDisplay().getWeekSchedules();
+        ArrayList<PersonSchedule> schedules = model.getScheduleWindowDisplay().getPersonSchedules().get(0);
         String output = "";
-        for (WeekSchedule s : schedules) {
+        for (PersonSchedule s : schedules) {
             output += s.toString() + "\n";
         }
         return new CommandResult(MESSAGE_SUCCESS + output);

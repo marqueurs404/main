@@ -8,9 +8,8 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.TimeBook;
-import seedu.address.model.display.detailwindow.DetailWindowDisplay;
+import seedu.address.model.display.schedulewindow.ScheduleWindowDisplay;
 import seedu.address.model.display.sidepanel.GroupDisplay;
 import seedu.address.model.display.sidepanel.PersonDisplay;
 import seedu.address.model.display.sidepanel.SidePanelDisplay;
@@ -41,7 +40,7 @@ public interface Logic {
     /**
      * Returns the current main window display model.
      */
-    DetailWindowDisplay getMainWindowDisplay();
+    ScheduleWindowDisplay getMainWindowDisplay();
 
     /**
      * Returns the current side panel display model.
@@ -66,13 +65,6 @@ public interface Logic {
     ArrayList<String> groupSuggester(String prefix);
 
     //=========== Legacy =============================================================
-
-    /**
-     * Returns the AddressBook.
-     *
-     * @see seedu.address.model.Model#getAddressBook()
-     */
-    ReadOnlyAddressBook getAddressBook();
 
     /**
      * Returns an unmodifiable view of the filtered list of persons

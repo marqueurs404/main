@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import seedu.address.commons.util.StringUtil;
+import seedu.address.model.gmaps.Location;
 
 /**
  * Url Constructor Util
@@ -78,7 +79,7 @@ public class UrlUtil {
      * @return
      */
     public static String generateGmapsDistanceMatrixUrl(
-            ArrayList<String> locationsRow, ArrayList<String> locationsColumn) throws InvalidParameterException {
+            ArrayList<Location> locationsRow, ArrayList<Location> locationsColumn) throws InvalidParameterException {
         if (locationsColumn.size() > 10 || locationsRow.size() > 10) {
             throw new InvalidParameterException("GMAPS API Only can make request to 10 locations.");
         }
@@ -87,10 +88,10 @@ public class UrlUtil {
         String originQueryParams = "origins=";
         String destinationQueryParams = "destinations=";
         for (int i = 0; i < locationsRow.size(); i++) {
-            originQueryParams = originQueryParams + locationsRow.get(i) + "|";
+            originQueryParams = originQueryParams + "place_id:" + locationsRow.get(i).getPlaceId() + "|";
         }
         for (int i = 0; i < locationsColumn.size(); i++) {
-            destinationQueryParams = destinationQueryParams + locationsColumn.get(i) + "|";
+            destinationQueryParams = destinationQueryParams + "place_id:" + locationsColumn.get(i).getPlaceId() + "|";
         }
         originQueryParams = originQueryParams + "&";
         destinationQueryParams = destinationQueryParams + "&";
@@ -109,6 +110,20 @@ public class UrlUtil {
         String apiKeyQueryParams = "key=" + gmapsApiKey + "&";
         String queryParams = "input=" + locationName + "&";
         String fullUrl = baseUrl + queryParams + apiKeyQueryParams;
+        return fullUrl;
+    }
+
+    /**
+     * This method is used to get image from GMAPS and save to local directory
+     * @param validLocationName
+     * @return
+     */
+    public static String generateGmapsStaticImage(String validLocationName) {
+        String baseUrl = "https://maps.googleapis.com/maps/api/staticmap?size=500x500&zoom=17";
+        String markerQueryParam = "&markers=color:blue|size:large|label:L|" + validLocationName;
+        String centerQueryParam = "&center=" + validLocationName;
+        String apiKeyQueryParams = "&key=" + gmapsApiKey + "&";
+        String fullUrl = baseUrl + markerQueryParam + centerQueryParam + apiKeyQueryParams;
         return fullUrl;
     }
 }

@@ -4,13 +4,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.gmaps.Location;
+
 class UrlUtilTest {
+
+    @Test
+    void generateUrl() throws MalformedURLException {
+        URL actualUrl = UrlUtil.generateUrl("https://www.google.com.sg");
+        URL expectedUrl = new URL("https://www.google.com.sg");
+        assertEquals(actualUrl, expectedUrl);
+    }
+
+    @Test
+    void splitQuery() throws UnsupportedEncodingException {
+        URL url = UrlUtil.generateUrl("https://www.google.com.sg?key1=value1&key2=value2");
+        Map<String, String> mapping = UrlUtil.splitQuery(url);
+        assertEquals("value1", mapping.get("key1"));
+        assertEquals("value2", mapping.get("key2"));
+    }
 
     @Test
     void sanitizeApiKey() {
@@ -33,17 +54,32 @@ class UrlUtilTest {
 
     @Test
     void generateDistanceMatrixUrl() {
-        ArrayList<String> tooLongStringList = new ArrayList<>();
+        ArrayList<Location> tooLongStringList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            tooLongStringList.add("qwert");
+            tooLongStringList.add(new Location("qwert"));
         }
         assertThrows(InvalidParameterException.class, () ->
                 UrlUtil.generateGmapsDistanceMatrixUrl(tooLongStringList, tooLongStringList));
 
-        ArrayList<String> arg = new ArrayList<>(Arrays.asList("LT17", "LT13", "LT14"));
-        String expectedUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial"
-                + "&origins=LT17|LT13|LT14|&destinations=LT17|LT13|LT14|&key=";
+        Location lt17 = new Location("LT17");
+        lt17.setPlaceId("ChIJBeHqfnAb2jERL1OoMUzA7yE");
+        Location lt13 = new Location("LT13");
+        lt13.setPlaceId("ChIJoViMIbYb2jERQbzhdcWZAc4");
+        Location lt14 = new Location("LT14");
+        lt14.setPlaceId("ChIJBRIdw1Yb2jER_w4k6qhkwAk");
+        ArrayList<Location> arg = new ArrayList<>(Arrays.asList(lt17, lt13, lt14));
+        String expectedUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="
+                + "place_id:ChIJBeHqfnAb2jERL1OoMUzA7yE|place_id:ChIJoViMIbYb2jERQbzhdcWZAc4|place_id:"
+                + "ChIJBRIdw1Yb2jER_w4k6qhkwAk|&destinations=place_id:ChIJBeHqfnAb2jERL1OoMUzA7yE|place_id:"
+                + "ChIJoViMIbYb2jERQbzhdcWZAc4|place_id:ChIJBRIdw1Yb2jER_w4k6qhkwAk|&key=";
         assertEquals(UrlUtil.generateGmapsDistanceMatrixUrl(arg, arg), expectedUrl);
+    }
+
+    @Test
+    void generateGmapsStaticImage() {
+        String expectedUrl = "https://maps.googleapis.com/maps/api/staticmap?size=500x500&zoom=17"
+                + "&markers=color:blue|size:large|label:L|NUS_LT17&center=NUS_LT17&key=&";
+        assertEquals(UrlUtil.generateGmapsStaticImage("NUS_LT17"), expectedUrl);
     }
 }
 

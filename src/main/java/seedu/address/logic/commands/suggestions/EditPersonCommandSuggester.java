@@ -1,6 +1,5 @@
 package seedu.address.logic.commands.suggestions;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,13 +11,14 @@ import seedu.address.logic.parser.Prefix;
 import seedu.address.model.Model;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 
 /**
  * Provides suggestions for the {@link Prefix}es of the {@link seedu.address.logic.commands.EditPersonCommand}.
  */
 public class EditPersonCommandSuggester extends Suggester {
-    public static final List<Prefix> SUPPORTED_PREFIXES = Collections.unmodifiableList(List.of(
+    public static final List<Prefix> SUPPORTED_PREFIXES = List.of(
             CliSyntax.PREFIX_EDIT,
             CliSyntax.PREFIX_NAME,
             CliSyntax.PREFIX_PHONE,
@@ -26,7 +26,7 @@ public class EditPersonCommandSuggester extends Suggester {
             CliSyntax.PREFIX_ADDRESS,
             CliSyntax.PREFIX_REMARK,
             CliSyntax.PREFIX_TAG
-    ));
+    );
 
     protected static Optional<Person> getSelectedPerson(final Model model, final ArgumentList arguments) {
         final Optional<String> personNameInput = arguments.getFirstValueOfPrefix(CliSyntax.PREFIX_EDIT);
@@ -35,7 +35,12 @@ public class EditPersonCommandSuggester extends Suggester {
         }
 
         final Name personName = new Name(personNameInput.get());
-        final Person person = model.findPerson(personName);
+        Person person = null;
+        try {
+            person = model.findPerson(personName);
+        } catch (PersonNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return Optional.ofNullable(person);
     }

@@ -40,8 +40,8 @@ public class ShowNusModCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        AcadYear acadYear = options.getAcadYear().orElse(model.getDefaultAcadYear());
-        SemesterNo semesterNo = options.getSemesterNo().orElse(model.getDefaultSemesterNo());
+        AcadYear acadYear = options.getAcadYear().orElse(model.getAcadYear());
+        SemesterNo semesterNo = options.getSemesterNo().orElse(model.getSemesterNo());
         ModuleId moduleId = new ModuleId(acadYear, moduleCode);
 
         try {
@@ -76,7 +76,8 @@ public class ShowNusModCommand extends Command {
         private AcadYear acadYear;
         private SemesterNo semesterNo;
 
-        public ShowNusModCommandOptions() {}
+        public ShowNusModCommandOptions() {
+        }
 
         public Optional<AcadYear> getAcadYear() {
             return Optional.ofNullable(acadYear);

@@ -1,23 +1,22 @@
 package seedu.address.model.module;
 
-import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.module.exceptions.LessonTypeNotFoundException;
+import seedu.address.model.module.exceptions.SemesterNoNotFoundException;
 import seedu.address.websocket.util.UrlUtil;
 
 /**
@@ -33,20 +32,16 @@ public class NusModsShareLink {
             + "A MODULE_LESSON_PAIR should look like MODULE_CODE=LESSON_TYPE:LESSON_NUMBER.\n"
             + "An example link: " + EXAMPLE + "\n";
 
-    public static final Map<String, String> SEMESTER_NUMBER_MAPPING = Map.ofEntries(
-            entry("sem-1", "1"),
-            entry("sem-2", "2"),
-            entry("st-i", "3"),
-            entry("st-ii", "4")
-    );
+    public static final Set<String> SHORT_SEMESTER_NAMES = SemesterNo.getShortSemesterNames();
+    public static final Set<String> LESSON_TYPE_ABBREVIATIONS = LessonType.getAbbreviations();
 
-    public static final String SEMESTER_REGEX = "(" + String.join("|", SEMESTER_NUMBER_MAPPING.keySet()) + ")";
+    public static final String SEMESTER_REGEX = "(" + String.join("|", SHORT_SEMESTER_NAMES) + ")";
     public static final String VALIDATION_REGEX = "^https://nusmods.com/timetable/"
             + SEMESTER_REGEX + "/share?(.+)$";
 
     public final String value;
     public final SemesterNo semesterNo;
-    public final Map<ModuleCode, List<LessonNo>> moduleLessonsMap;
+    public final Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap;
 
     public NusModsShareLink(String link) throws ParseException {
         requireNonNull(link);
@@ -59,31 +54,48 @@ public class NusModsShareLink {
             String semString = "";
             if (m.matches()) {
                 semString = m.group(1);
-            } else {
+            } else { //no semester in URL
                 throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
             }
 
-            if (!SEMESTER_NUMBER_MAPPING.containsKey(semString)) {
+            SemesterNo semesterNo;
+            try {
+                semesterNo = SemesterNo.findSemesterNo(semString);
+            } catch (SemesterNoNotFoundException e) { // semester in URL is invalid.
                 throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
             }
-            SemesterNo semesterNo = new SemesterNo(SEMESTER_NUMBER_MAPPING.get(semString));
-
-            // parse pairs of module code & lessons from query string
+            // parse pairs of module code & lessons from query string.
             URL url = new URL(link);
             Map<String, String> queryMap = UrlUtil.splitQuery(url);
-            Map<ModuleCode, List<LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
+            if (queryMap.isEmpty()) { // no key-value pairs found in query string.
+                throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
+            }
+            Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
             for (Map.Entry<String, String> entry : queryMap.entrySet()) {
                 ModuleCode moduleCode = ParserUtil.parseModuleCode(entry.getKey());
-                if (StringUtil.isNullOrEmpty(entry.getValue())) { //skip if no query value
+                if (StringUtil.isNullOrEmpty(entry.getValue())) {
+                    // Skip if no value in pair, happens for combinations like CS2101/CS2103T, where CS2101
+                    // has no lessons.
                     continue;
                 }
-                String[] lessons = entry.getValue().split(",");
-                List<LessonNo> lessonsNos = Arrays.stream(lessons)
-                        .map(l -> l.split(":")[1])
-                        .map(LessonNo::new)
-                        .collect(Collectors.toList());
+                String[] lessonTypeNoPairsArr = entry.getValue().split(",");
+                Map<LessonType, LessonNo> lessonTypesNosMap = new LinkedHashMap<>();
+                for (int i = 0; i < lessonTypeNoPairsArr.length; i++) {
+                    String[] typeNoPair = lessonTypeNoPairsArr[i].split(":");
+                    LessonType lType;
+                    try {
+                        lType = LessonType.findLessonType(typeNoPair[0]);
+                    } catch (LessonTypeNotFoundException e) {
+                        throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
+                    }
+                    LessonNo lNo = new LessonNo(typeNoPair[1]);
+                    lessonTypesNosMap.put(lType, lNo);
+                }
+                if (lessonTypesNosMap.isEmpty()) { // no lesson type-number pairs parsed
+                    throw new ParseException(NusModsShareLink.MESSAGE_CONSTRAINTS);
+                }
 
-                moduleLessonsMap.put(moduleCode, lessonsNos);
+                moduleLessonsMap.put(moduleCode, lessonTypesNosMap);
             }
 
             value = link;
