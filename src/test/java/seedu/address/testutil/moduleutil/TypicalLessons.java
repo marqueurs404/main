@@ -24,7 +24,7 @@ public class TypicalLessons {
      *
      * @return Lesson 1
      */
-    public static Lesson generateTypicalLesson1() {
+    public static Lesson generateValidLesson() {
         return new Lesson(LESSON_NO_1, START_TIME_1, END_TIME_1, WEEKS_1,
                 LessonType.TUTORIAL, DayOfWeek.TUESDAY, VENUE_1);
     }

@@ -1,5 +1,7 @@
 package seedu.address.model.module;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,8 @@ public class Semester {
     private final Exam exam;
 
     public Semester(SemesterNo semesterNo, List<Lesson> timetable) {
+        requireNonNull(semesterNo);
+        requireNonNull(timetable);
         this.semesterNo = semesterNo;
         this.exam = null;
         this.timetable.addAll(timetable);
@@ -21,6 +25,9 @@ public class Semester {
 
     public Semester(SemesterNo semesterNo, List<Lesson> timetable,
                     Exam exam) {
+        requireNonNull(semesterNo);
+        requireNonNull(timetable);
+        requireNonNull(exam);
         this.semesterNo = semesterNo;
         this.exam = exam;
         this.timetable.addAll(timetable);

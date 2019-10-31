@@ -60,8 +60,6 @@ public class NusModsParser {
         }
     }
 
-    //TODO: checks to throw parseException if missing compulsory keys
-    //      checks to throw invalidValueException if value is invalid
     /**
      * Parses a Module from JSONObject.
      * @param obj JSONObject to parse from.

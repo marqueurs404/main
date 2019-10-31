@@ -25,7 +25,7 @@ public class Exam {
 
     @Override
     public String toString() {
-        return "Exam Date: " + examDate.toString() + " " + Integer.toString(examDuration);
+        return "Exam Date: " + examDate.toString() + " " + examDuration;
     }
 
     @Override
