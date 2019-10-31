@@ -63,7 +63,13 @@ public class Semester {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("Semester ").append(semesterNo).append("\n");
+        StringBuilder result = new StringBuilder(semesterNo.toString()).append("\n");
+
+        if (exam != null) {
+            result.append(exam).append("\n");
+        } else {
+            result.append("No Exam\n");
+        }
 
         result.append("Timetable:\n");
         for (int i = 0; i < timetable.size(); i++) {

@@ -503,17 +503,7 @@ public class ModelManager implements Model {
 
     @Override
     public Module findModule(ModuleId moduleId) throws ModuleNotFoundException {
-        Module module;
-        try {
-            module = nusModsData.getModuleList().findModule(moduleId);
-        } catch (ModuleNotFoundException ex1) {
-            Optional<Module> moduleOptional = Cache.loadModule(moduleId);
-            if (moduleOptional.isEmpty()) {
-                throw new ModuleNotFoundException();
-            }
-            module = moduleOptional.get();
-        }
-        return module;
+        return nusModsData.findModule(moduleId);
     }
 
     @Override

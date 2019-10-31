@@ -23,40 +23,39 @@ class WeeksTest {
 
     @Test
     void testGetWeekNumbers() {
-        assertEquals(weeks_weekNumbers_allWeeks.getWeekNumbers(), TypicalWeeks.WEEK_NUMBERS_ALL);
+        assertEquals(TypicalWeeks.WEEK_NUMBERS_ALL, weeks_weekNumbers_allWeeks.getWeekNumbers());
     }
 
     @Test
     void testGetStartDate() {
-        assertEquals(weeks_startEndWeekNumbers_allWeeks.getStartDate(), TypicalWeeks.START_DATE_1);
+        assertEquals(TypicalWeeks.START_DATE_1, weeks_startEndWeekNumbers_allWeeks.getStartDate());
     }
 
     @Test
     void testGetEndDate() {
-        assertEquals(weeks_startEndWeekNumbers_allWeeks.getEndDate(), TypicalWeeks.END_DATE_1);
+        assertEquals(TypicalWeeks.END_DATE_1, weeks_startEndWeekNumbers_allWeeks.getEndDate());
     }
 
     @Test
     void testGetWeekInterval() {
-        assertEquals(weeks_startEndWeekInterval_interval1.getWeekInterval(), 1);
-        assertEquals(weeks_startEndWeekInterval_interval2.getWeekInterval(), 2);
+        assertEquals(1, weeks_startEndWeekInterval_interval1.getWeekInterval());
+        assertEquals(2, weeks_startEndWeekInterval_interval2.getWeekInterval());
     }
 
     @Test
     void testGetType() {
-        assertEquals(weeks_weekNumbers_allWeeks.getType(), WeeksType.WEEK_NUMBERS);
-        assertEquals(weeks_startEndWeekNumbers_allWeeks.getType(), WeeksType.START_END_WEEK_NUMBERS);
-        assertEquals(weeks_startEndWeekInterval_interval1.getType(), WeeksType.START_END_WEEK_INTERVAL);
+        assertEquals(WeeksType.WEEK_NUMBERS, weeks_weekNumbers_allWeeks.getType());
+        assertEquals(WeeksType.START_END_WEEK_NUMBERS, weeks_startEndWeekNumbers_allWeeks.getType());
+        assertEquals(WeeksType.START_END_WEEK_INTERVAL, weeks_startEndWeekInterval_interval1.getType());
     }
 
     @Test
     void testToString() {
-        assertEquals(weeks_weekNumbers_allWeeks.toString(),
-                "Week Numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]");
-        assertEquals(weeks_startEndWeekNumbers_allWeeks.toString(),
-                "Start Date: 2019-08-12 End Date: 2019-10-28 "
-                        + "Week Numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]");
-        assertEquals(weeks_startEndWeekInterval_interval1.toString(),
-                "Start Date: 2019-08-12 End Date: 2019-10-28 Week Interval: 1");
+        assertEquals("Week Numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]",
+                weeks_weekNumbers_allWeeks.toString());
+        assertEquals("Start Date: 2019-08-12 End Date: 2019-10-28 Week Numbers: "
+                + "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]", weeks_startEndWeekNumbers_allWeeks.toString());
+        assertEquals("Start Date: 2019-08-12 End Date: 2019-10-28 Week Interval: 1",
+                weeks_startEndWeekInterval_interval1.toString());
     }
 }

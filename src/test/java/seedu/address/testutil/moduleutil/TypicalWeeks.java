@@ -56,7 +56,7 @@ public class TypicalWeeks {
      * start date 2019-08-12 and end date 2019-10-28.
      */
     public static Weeks generateWeeks_startEndWeekNumbers_allWeeks() {
-        return new Weeks(WEEK_NUMBERS_ALL, START_DATE_1, END_DATE_1, -1, WeeksType.WEEK_NUMBERS);
+        return new Weeks(WEEK_NUMBERS_ALL, START_DATE_1, END_DATE_1, -1, WeeksType.START_END_WEEK_NUMBERS);
     }
 
     /**
@@ -64,7 +64,7 @@ public class TypicalWeeks {
      * but with start date later than end date.
      */
     public static Weeks generateWeeks_startEndWeekNumbers_invalidStartEnd() {
-        return new Weeks(WEEK_NUMBERS_ALL, END_DATE_1, START_DATE_1, -1, WeeksType.WEEK_NUMBERS);
+        return new Weeks(WEEK_NUMBERS_ALL, END_DATE_1, START_DATE_1, -1, WeeksType.START_END_WEEK_NUMBERS);
     }
 
     /**
@@ -72,7 +72,7 @@ public class TypicalWeeks {
      * start date 2019-08-12 and end date 2019-10-28.
      */
     public static Weeks generateWeeks_startEndWeekNumbers_oddWeeks() {
-        return new Weeks(WEEK_NUMBERS_ODD, START_DATE_1, END_DATE_1, -1, WeeksType.WEEK_NUMBERS);
+        return new Weeks(WEEK_NUMBERS_ODD, START_DATE_1, END_DATE_1, -1, WeeksType.START_END_WEEK_NUMBERS);
     }
 
     /**
@@ -81,7 +81,7 @@ public class TypicalWeeks {
      * @param interval week interval.
      */
     public static Weeks generateWeeks_startEndWeekInterval(int interval) {
-        return new Weeks(WEEK_NUMBERS_EMPTY, START_DATE_1, END_DATE_1, interval, WeeksType.WEEK_NUMBERS);
+        return new Weeks(WEEK_NUMBERS_EMPTY, START_DATE_1, END_DATE_1, interval, WeeksType.START_END_WEEK_INTERVAL);
     }
 
     /**
@@ -89,6 +89,6 @@ public class TypicalWeeks {
      * start date 2019-08-12 and end date 2019-10-28.
      */
     public static Weeks generateWeeks_startEndWeekInterval_invalidStartEndDate() {
-        return new Weeks(WEEK_NUMBERS_EMPTY, END_DATE_1, START_DATE_1, 1, WeeksType.WEEK_NUMBERS);
+        return new Weeks(WEEK_NUMBERS_EMPTY, END_DATE_1, START_DATE_1, 1, WeeksType.START_END_WEEK_INTERVAL);
     }
 }

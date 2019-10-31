@@ -1,5 +1,7 @@
 package seedu.address.model.module;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,6 +13,8 @@ public class Exam {
     private final int examDuration;
 
     public Exam(LocalDateTime examDate, int examDuration) {
+        requireNonNull(examDate);
+        requireNonNull(examDuration);
         this.examDate = examDate;
         this.examDuration = examDuration;
     }
