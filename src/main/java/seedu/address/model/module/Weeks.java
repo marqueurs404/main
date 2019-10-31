@@ -36,40 +36,20 @@ public class Weeks {
         return weekNumbers;
     }
 
-    public void setWeekNumbers(List<Integer> weekNumbers) {
-        this.weekNumbers = weekNumbers;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
     }
 
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     public int getWeekInterval() {
         return weekInterval;
     }
 
-    public void setWeekInterval(int weekInterval) {
-        this.weekInterval = weekInterval;
-    }
-
     public WeeksType getType() {
         return type;
-    }
-
-    public void setType(WeeksType type) {
-        this.type = type;
     }
 
     @Override

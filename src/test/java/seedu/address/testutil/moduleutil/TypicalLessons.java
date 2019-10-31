@@ -17,7 +17,7 @@ public class TypicalLessons {
     private static final Venue VENUE_1 = new Venue("COM2");
     private static final LocalTime START_TIME_1 = LocalTime.parse("1000");
     private static final LocalTime END_TIME_1 = LocalTime.parse("1200");
-    private static final Weeks WEEKS_1 = TypicalWeeks.generateTypicalWeeks1();
+    private static final Weeks WEEKS_1 = TypicalWeeks.generateWeeks_weekNumbers_allWeeks();
 
     /**
      * Generate a Typical Lesson.
