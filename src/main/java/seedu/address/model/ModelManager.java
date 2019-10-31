@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.AppSettings;
@@ -52,7 +51,6 @@ import seedu.address.model.person.exceptions.NoPersonFieldsEditedException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.person.schedule.Event;
 import seedu.address.model.person.schedule.Schedule;
-import seedu.address.websocket.Cache;
 
 /**
  * Represents the in-memory model of the address book data.

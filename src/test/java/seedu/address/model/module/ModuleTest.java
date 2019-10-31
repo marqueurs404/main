@@ -58,7 +58,7 @@ class ModuleTest {
     @Test
     void testHashCode() {
         assertEquals(module1.hashCode(), module1.hashCode());
-        assertNotEquals(module1.hashCode(), module2.hashCode());
+        assertEquals(module1.hashCode(), module2.hashCode());
         assertNotEquals(module1.hashCode(), module3.hashCode());
     }
 }

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Weeks of the {@code Lesson}, used to represent the schedule of a lesson.
@@ -70,5 +71,29 @@ public class Weeks {
         default: assert false;
         }
         return output;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Weeks)) {
+            return false;
+        }
+        Weeks w = (Weeks) other;
+        if (w == this) {
+            return true;
+        } else if (w.type.equals(this.type)
+                && w.weekNumbers.equals(this.weekNumbers)
+                && w.startDate.equals(this.startDate)
+                && w.endDate.equals(this.endDate)
+                && w.weekInterval == this.weekInterval) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, weekNumbers, startDate, endDate, weekInterval);
     }
 }

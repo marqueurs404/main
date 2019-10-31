@@ -41,7 +41,7 @@ public class Exam {
         if (exam == this) {
             return true;
         } else if (exam.examDate.equals(this.examDate)
-                && exam.examDate.equals(this.examDuration)) {
+                && exam.examDuration == this.examDuration) {
             return true;
         } else {
             return false;
