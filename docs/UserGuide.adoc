@@ -371,9 +371,9 @@ Format: `addmod n/NAME m/MODULE_CODE cl/CLASS_1_TYPE:CLASS_1_NUMBER,CLASS_2_TYPE
 
 Examples:
 
-* `addmod n/John m/CS2103T class/G01,T5`
-* `addmod n/John m/CS2103T class/G01,T5 ay/2018/2019`
-* `addmod n/John m/CS2103T class/G01,T5 ay/2019/2020 s/1`
+* `addmod n/John m/CS2103T cl/LEC:G01`
+* `addmod n/John m/CS3230 cl/LEC:1,TUT:08`
+* `addmod n/John m/CS2100 cl/LEC:1,TUT:01,LAB:08`
 
 Step-By-Step:
 
@@ -390,7 +390,7 @@ image::nusmods/addmod2.PNG[]
 Already have your modules timetable on NUSMods?
 Great, you can easily add your modules timetable into TimeBook with the `addmods` command!
 
-Format: `addmods n/NAME l/NUSMODS_SHARE_LINK`
+Format: `addmods n/NAME link/NUSMODS_SHARE_LINK`
 
 ****
 * Reads the specified `NUSMODS_SHARE_LINK` to get the modules and classes, then adds the classes into the person's schedule.
@@ -400,8 +400,8 @@ Format: `addmods n/NAME l/NUSMODS_SHARE_LINK`
 
 Examples:
 
-* `addmods n/John l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
-* `addmods n/Bob l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmods n/John link/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmods n/Bob link/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
 
 Step-By-Step:
 
