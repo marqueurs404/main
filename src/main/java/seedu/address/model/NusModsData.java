@@ -28,12 +28,22 @@ public class NusModsData {
     private Holidays holidays;
 
     public NusModsData() {
+        this.moduleSummaryList = new ModuleSummaryList();
+        this.moduleList = new ModuleList();
+        this.holidays = new Holidays();
+        this.acadCalendar = new AcadCalendar();
+    }
+
+    /**
+     * Loads all NusMods data from the cache.
+     */
+    public void loadAllFromCache() {
         Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
         if (moduleSummaryListOptional.isPresent()) {
             this.moduleSummaryList = moduleSummaryListOptional.get();
             logger.info("Loaded module summary list");
         } else {
-            this.moduleSummaryList = moduleSummaryListOptional.get();
+            this.moduleSummaryList = new ModuleSummaryList();
             logger.warning("Filed to load module summary list, starting with empty list");
         }
 

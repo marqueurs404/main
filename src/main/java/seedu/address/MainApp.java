@@ -91,6 +91,7 @@ public class MainApp extends Application {
         }
 
         NusModsData nusModsData = new NusModsData();
+        nusModsData.loadAllFromCache();
 
         GmapsModelManager gmapsModelManager = new GmapsModelManager();
 

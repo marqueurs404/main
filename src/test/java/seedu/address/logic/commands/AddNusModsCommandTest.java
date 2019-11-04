@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ALICE;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ZACK;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -21,10 +21,10 @@ import seedu.address.testutil.moduleutil.NusModsShareLinkStrings;
 
 class AddNusModsCommandTest {
 
-    private ModelManager model;
+    private static ModelManager model;
 
-    @BeforeEach
-    void setUp() throws DuplicateMappingException, DuplicatePersonException, DuplicateGroupException {
+    @BeforeAll
+    static void setUp() throws DuplicateMappingException, DuplicatePersonException, DuplicateGroupException {
         model = TypicalModel.generateTypicalModel();
     }
 

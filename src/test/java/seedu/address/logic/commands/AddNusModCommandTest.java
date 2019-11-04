@@ -6,7 +6,7 @@ import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ZACK;
 
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -24,10 +24,10 @@ import seedu.address.testutil.modelutil.TypicalModel;
 
 class AddNusModCommandTest {
 
-    private ModelManager model;
+    private static ModelManager model;
 
-    @BeforeEach
-    void setUp() throws DuplicateMappingException, DuplicatePersonException, DuplicateGroupException {
+    @BeforeAll
+    static void setUp() throws DuplicateMappingException, DuplicatePersonException, DuplicateGroupException {
         model = TypicalModel.generateTypicalModel();
     }
 
@@ -79,7 +79,7 @@ class AddNusModCommandTest {
         new AddNusModCommand(name, moduleCode, lessonTypeNumMap).execute(model);
         CommandResult actualCommandResult = new AddNusModCommand(name, moduleCode, lessonTypeNumMap).execute(model);
         CommandResult expectedCommandResult = new CommandResult(
-                String.format(AddNusModCommand.MESSAGE_FAILURE, AddNusModCommand.MESSAGE_MODULE_NOT_FOUND));
+                String.format(AddNusModCommand.MESSAGE_FAILURE, AddNusModCommand.MESSAGE_EVENTS_CLASH));
 
         assertTrue(actualCommandResult.equals(expectedCommandResult));
     }
