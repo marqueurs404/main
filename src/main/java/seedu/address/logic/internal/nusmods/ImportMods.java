@@ -23,11 +23,15 @@ import seedu.address.websocket.NusModsParser;
  */
 public class ImportMods {
     private static final Logger logger = LogsCenter.getLogger(Cache.class);
+    private static boolean isSilent = false; //if true, don't log, else log.
 
     /**
      * Main driver.
      */
     public static void main(String[] args) {
+        if (args.length > 0 && args[0].equals("silent")) {
+            isSilent = true;
+        }
         importMods(AppSettings.DEFAULT_ACAD_YEAR);
     }
 
@@ -73,24 +77,32 @@ public class ImportMods {
             try {
                 moduleList.findModule(modSummary.getModuleId());
                 foundFromFile += 1;
-                logger.info("[" + curr + "/" + total + "] Found in file: " + modSummary);
+                if (!isSilent) {
+                    logger.info("[" + curr + "/" + total + "] Found in file: " + modSummary);
+                }
             } catch (ModuleNotFoundException e) {
                 // Cache module if missing from moduleList
                 Optional<Module> moduleOptional = Cache.loadModule(modSummary.getModuleId());
                 if (!moduleOptional.isPresent()) {
                     failed += 1;
-                    logger.severe("[" + curr + "/" + total + "] Hmm could not get detailed data for this module: "
-                            + modSummary);
+                    if (!isSilent) {
+                        logger.severe("[" + curr + "/" + total + "] Hmm could not get detailed data for this module: "
+                                + modSummary);
+                    }
                     break;
                 } else {
                     foundFromApi += 1;
-                    logger.info("[" + curr + "/" + total + "] Found from API: " + modSummary);
+                    if (!isSilent) {
+                        logger.info("[" + curr + "/" + total + "] Found from API: " + modSummary);
+                    }
                 }
             }
 
         }
-        logger.info("Modules foundFromFile/foundFromApi/failed/total: [" + foundFromFile + "/"
-                + foundFromApi + "/" + failed + "/" + total + "]");
+        if (!isSilent) {
+            logger.info("Modules foundFromFile/foundFromApi/failed/total: [" + foundFromFile + "/"
+                    + foundFromApi + "/" + failed + "/" + total + "]");
+        }
     }
 
     /**
@@ -107,12 +119,16 @@ public class ImportMods {
                 moduleSummaryListOptional = Optional.of(NusModsParser.parseModuleSummaryList(
                         moduleSummaryJsonOptional.get(), year));
             } catch (ParseException e) {
-                logger.info("Failed to parse module summaries: " + e.getMessage());
+                if (!isSilent) {
+                    logger.info("Failed to parse module summaries: " + e.getMessage());
+                }
             }
         } else {
             moduleSummaryListOptional = Cache.loadModuleSummaryList();
             if (!moduleSummaryListOptional.isPresent()) {
-                logger.severe("No module summaries, can't scrape all detailed modules.");
+                if (!isSilent) {
+                    logger.severe("No module summaries, can't scrape all detailed modules.");
+                }
             }
         }
         return moduleSummaryListOptional;
