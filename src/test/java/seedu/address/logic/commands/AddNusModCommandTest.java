@@ -28,7 +28,7 @@ class AddNusModCommandTest {
 
     @BeforeAll
     static void setUp() throws DuplicateMappingException, DuplicatePersonException, DuplicateGroupException {
-        model = TypicalModel.generateTypicalModel();
+        model = TypicalModel.generateModelWithNusModsData();
     }
 
     @Test

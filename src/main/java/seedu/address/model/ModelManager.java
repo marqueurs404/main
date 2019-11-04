@@ -500,6 +500,11 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void setNusModsData(NusModsData nusModsData) {
+        this.nusModsData = nusModsData;
+    }
+
+    @Override
     public Module findModule(ModuleId moduleId) throws ModuleNotFoundException {
         return nusModsData.findModule(moduleId);
     }
