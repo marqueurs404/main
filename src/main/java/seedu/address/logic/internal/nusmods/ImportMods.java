@@ -36,37 +36,33 @@ public class ImportMods {
      * Incrementally caches each module into the detailed modules file.
      * To re-import all modules, delete the existing detailed modules file before executing this method.
      */
-    public static void importMods(AcadYear year) {
+    private static void importMods(AcadYear year) {
         NusModsApi api = new NusModsApi(year);
-        ModuleSummaryList moduleSummaries = null;
 
-        // try to get module summaries from api, then local file
-        Optional<JSONArray> moduleSummaryJsonOptional = api.getModuleList();
-        if (moduleSummaryJsonOptional.isPresent()) {
-            try {
-                moduleSummaries = NusModsParser.parseModuleSummaryList(
-                        moduleSummaryJsonOptional.get(), year);
-            } catch (ParseException e) {
-                logger.info("Failed to parse module summaries: " + e.getMessage());
-            }
-        }
-        if (moduleSummaries != null) {
-            Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
-            if (!moduleSummaryListOptional.isPresent()) {
-                logger.severe("No module summaries, can't scrape all detailed modules.");
-                return;
-            }
-            moduleSummaries = moduleSummaryListOptional.get();
+        Optional<ModuleSummaryList> moduleSummariesOptional = getModuleSummariesFromApiThenCache(api, year);
+        ModuleSummaryList moduleSummaries;
+        if (moduleSummariesOptional.isPresent()) {
+            moduleSummaries = moduleSummariesOptional.get();
+        } else {
+            return;
         }
 
-        // load detailed modules data from local file
         ModuleList moduleList = new ModuleList();
         Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
         if (moduleListOptional.isPresent()) {
             moduleList = moduleListOptional.get();
         }
 
-        // Cache module if missing from local file
+        importMods(moduleSummaries, moduleList);
+
+    }
+
+    /**
+     * Imports detailed data of all modules in moduleSummaries. If a module already exists in moduleList, then ignore.
+     * @param moduleSummaries ModuleSummaryList.
+     * @param moduleList ModuleList.
+     */
+    private static void importMods(ModuleSummaryList moduleSummaries, ModuleList moduleList) {
         int foundFromFile = 0;
         int foundFromApi = 0;
         int failed = 0;
@@ -79,6 +75,7 @@ public class ImportMods {
                 foundFromFile += 1;
                 logger.info("[" + curr + "/" + total + "] Found in file: " + modSummary);
             } catch (ModuleNotFoundException e) {
+                // Cache module if missing from moduleList
                 Optional<Module> moduleOptional = Cache.loadModule(modSummary.getModuleId());
                 if (!moduleOptional.isPresent()) {
                     failed += 1;
@@ -94,5 +91,30 @@ public class ImportMods {
         }
         logger.info("Modules foundFromFile/foundFromApi/failed/total: [" + foundFromFile + "/"
                 + foundFromApi + "/" + failed + "/" + total + "]");
+    }
+
+    /**
+     * Gets a ModuleSummaryList from API, if fails then go to cache.
+     * @param api NusModsApi instance.
+     * @param year AcadYear.
+     * @return Optional of ModuleSummaryList or empty.
+     */
+    private static Optional<ModuleSummaryList> getModuleSummariesFromApiThenCache(NusModsApi api, AcadYear year) {
+        Optional<JSONArray> moduleSummaryJsonOptional = api.getModuleList();
+        Optional<ModuleSummaryList> moduleSummaryListOptional = Optional.empty();
+        if (moduleSummaryJsonOptional.isPresent()) {
+            try {
+                moduleSummaryListOptional = Optional.of(NusModsParser.parseModuleSummaryList(
+                        moduleSummaryJsonOptional.get(), year));
+            } catch (ParseException e) {
+                logger.info("Failed to parse module summaries: " + e.getMessage());
+            }
+        } else {
+            moduleSummaryListOptional = Cache.loadModuleSummaryList();
+            if (!moduleSummaryListOptional.isPresent()) {
+                logger.severe("No module summaries, can't scrape all detailed modules.");
+            }
+        }
+        return moduleSummaryListOptional;
     }
 }
