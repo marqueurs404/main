@@ -1,8 +1,11 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ALICE;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ZACK;
+
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -89,5 +92,19 @@ class AddNusModsCommandTest {
                 String.format(AddNusModsCommand.MESSAGE_FAILURE, AddNusModsCommand.MESSAGE_EVENTS_CLASH));
 
         assertTrue(actualCommandResult.equals(expectedCommandResult));
+    }
+
+    @Test
+    void equals() throws ParseException {
+        Name name = ALICE.getName();
+        NusModsShareLink validLink1 = NusModsShareLink.parseLink(
+                NusModsShareLinkStrings.VALID_LINK_1);
+        NusModsShareLink validLink2 = NusModsShareLink.parseLink(
+                NusModsShareLinkStrings.VALID_LINK_2);
+
+        AddNusModsCommand command = new AddNusModsCommand(name, validLink1);
+        assertTrue(command.equals(command));
+        assertTrue(command.equals(new AddNusModsCommand(name, validLink1)));
+        assertFalse(command.equals(new AddNusModsCommand(name, validLink2)));
     }
 }

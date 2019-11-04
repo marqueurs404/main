@@ -1,6 +1,6 @@
 package seedu.address.logic.commands;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ALICE;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ZACK;
 
@@ -82,5 +82,18 @@ class AddNusModCommandTest {
                 String.format(AddNusModCommand.MESSAGE_FAILURE, AddNusModCommand.MESSAGE_EVENTS_CLASH));
 
         assertTrue(actualCommandResult.equals(expectedCommandResult));
+    }
+
+    @Test
+    void equals() throws ParseException {
+        Name name = ALICE.getName();
+        ModuleCode moduleCode = new ModuleCode("CS3230");
+        Map<LessonType, LessonNo> lessonTypeNumMap = ParserUtil.parseLessonTypeNumMap("LEC:1,TUT:08");
+        Map<LessonType, LessonNo> lessonTypeNumMap2 = ParserUtil.parseLessonTypeNumMap("LEC:1,TUT:09");
+
+        AddNusModCommand command = new AddNusModCommand(name, moduleCode, lessonTypeNumMap);
+        assertTrue(command.equals(command));
+        assertTrue(command.equals(new AddNusModCommand(name, moduleCode, lessonTypeNumMap)));
+        assertFalse(command.equals(new AddNusModCommand(name, moduleCode, lessonTypeNumMap2)));
     }
 }
