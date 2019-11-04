@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ALICE;
 import static seedu.address.testutil.personutil.TypicalPersonDescriptor.ZACK;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
