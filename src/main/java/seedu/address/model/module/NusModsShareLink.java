@@ -64,7 +64,9 @@ public class NusModsShareLink {
      */
     public static NusModsShareLink parseLink(String link) throws ParseException {
         requireNonNull(link);
+
         link = link.trim();
+
         Pattern p = Pattern.compile(VALIDATION_REGEX);
         Matcher m = p.matcher(link);
         if (!m.matches()) { // not a valid NUSMods url.
@@ -75,6 +77,71 @@ public class NusModsShareLink {
         SemesterNo semesterNo = SemesterNo.findSemesterNo(m.group(1));
 
         // parse pairs of module code & lessons from query string.
+        Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap = parseModuleLessonsMap(link);
+
+
+        return new NusModsShareLink(link, semesterNo, moduleLessonsMap);
+    }
+
+    /**
+     * Parses a Map of Maps for modules to lesson types and lesson numbers.
+     * @param link a string representing an NusMods share link.
+     * @return a Map of Maps.
+     * @throws ParseException if query string is missing, lesson type is invalid or no lesson type:number pairs parsed.
+     */
+    private static Map<ModuleCode, Map<LessonType, LessonNo>> parseModuleLessonsMap(String link) throws ParseException {
+        Map<String, String> queryMap = parseQueryString(link);
+
+        Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : queryMap.entrySet()) {
+            ModuleCode moduleCode = ParserUtil.parseModuleCode(entry.getKey());
+            if (StringUtil.isNullOrEmpty(entry.getValue())) {
+                // Skip if no value in pair, happens for combinations like CS2101/CS2103T, where CS2101
+                // has no lessons.
+                continue;
+            }
+            Map<LessonType, LessonNo> lessonTypesNosMap = parseLessonTypesNosMap(entry);
+            moduleLessonsMap.put(moduleCode, lessonTypesNosMap);
+        }
+
+        if (moduleLessonsMap.isEmpty()) { // no CLASS_TYPE:CLASS_NUMBER pairs to add at all
+            throw new ParseException(MESSAGE_NOTHING_TO_ADD);
+        }
+        return moduleLessonsMap;
+    }
+
+    /**
+     * Parses a Map of {@code LessonType} to {@code LessonNo} given a Map.Entry of String key to String value.
+     * @param entry a Map.Entry of String key to String value.
+     * @return a Map of {@code LessonType} to {@code LessonNo}.
+     * @throws ParseException if unable to parse a valid {@code LessonType}.
+     */
+    private static Map<LessonType, LessonNo> parseLessonTypesNosMap(Map.Entry<String, String> entry)
+            throws ParseException {
+        String[] lessonTypeNoPairsArr = entry.getValue().split(",");
+        Map<LessonType, LessonNo> lessonTypesNosMap = new LinkedHashMap<>();
+        for (int i = 0; i < lessonTypeNoPairsArr.length; i++) {
+            String[] typeNoPair = lessonTypeNoPairsArr[i].split(":");
+            LessonType lType;
+            try {
+                lType = LessonType.findLessonType(typeNoPair[0]);
+            } catch (LessonTypeNotFoundException e) {
+                throw new ParseException(String.format(MESSAGE_FORMAT_INVALID_CLASS_TYPE,
+                        typeNoPair[0], entry.getValue()));
+            }
+            LessonNo lNo = new LessonNo(typeNoPair[1]);
+            lessonTypesNosMap.put(lType, lNo);
+        }
+        return lessonTypesNosMap;
+    }
+
+    /**
+     * Parse query string into a map of key-value pairs.
+     * @param link string to parse.
+     * @return a map of key-value pairs.
+     * @throws ParseException if url is invalid or no key-value pairs in query string.
+     */
+    private static Map<String, String> parseQueryString(String link) throws ParseException {
         Map<String, String> queryMap;
         try {
             queryMap = UrlUtil.splitQuery(new URL(link));
@@ -84,38 +151,7 @@ public class NusModsShareLink {
         if (queryMap.isEmpty()) { // no key-value pairs found in query string.
             throw new ParseException(MESSAGE_MISSING_QUERY_STRING);
         }
-        Map<ModuleCode, Map<LessonType, LessonNo>> moduleLessonsMap = new LinkedHashMap<>();
-        for (Map.Entry<String, String> entry : queryMap.entrySet()) {
-            ModuleCode moduleCode = ParserUtil.parseModuleCode(entry.getKey());
-            if (StringUtil.isNullOrEmpty(entry.getValue())) {
-                // Skip if no value in pair, happens for combinations like CS2101/CS2103T, where CS2101
-                // has no lessons.
-                continue;
-            }
-            String[] lessonTypeNoPairsArr = entry.getValue().split(",");
-            Map<LessonType, LessonNo> lessonTypesNosMap = new LinkedHashMap<>();
-            for (int i = 0; i < lessonTypeNoPairsArr.length; i++) {
-                String[] typeNoPair = lessonTypeNoPairsArr[i].split(":");
-                LessonType lType;
-                try {
-                    lType = LessonType.findLessonType(typeNoPair[0]);
-                } catch (LessonTypeNotFoundException e) {
-                    throw new ParseException(String.format(MESSAGE_FORMAT_INVALID_CLASS_TYPE,
-                            typeNoPair[0], entry.getValue()));
-                }
-                LessonNo lNo = new LessonNo(typeNoPair[1]);
-                lessonTypesNosMap.put(lType, lNo);
-            }
-
-            moduleLessonsMap.put(moduleCode, lessonTypesNosMap);
-        }
-
-        if (moduleLessonsMap.isEmpty()) { // no CLASS_TYPE:CLASS_NUMBER pairs to add at all
-            throw new ParseException(MESSAGE_NOTHING_TO_ADD);
-        }
-
-
-        return new NusModsShareLink(link, semesterNo, moduleLessonsMap);
+        return queryMap;
     }
 
     /**
