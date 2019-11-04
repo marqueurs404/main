@@ -95,43 +95,11 @@ public class MainApp extends Application {
             logger.severe("Failed to load TimeBook, starting with a new instance");
         }
 
-        NusModsData nusModsData = initNusModsData();
+        NusModsData nusModsData = new NusModsData();
 
         GmapsModelManager gmapsModelManager = new GmapsModelManager();
 
         return new ModelManager(timeBook, userPrefs, nusModsData, gmapsModelManager);
-    }
-
-    /**
-     * Returns an {@code NusModsData} with the data from {@code Cache}.
-     */
-    private NusModsData initNusModsData() {
-        NusModsData nusModsData = new NusModsData();
-
-        Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
-        if (moduleSummaryListOptional.isPresent()) {
-            nusModsData.setModuleSummaryList(moduleSummaryListOptional.get());
-            logger.info("Loaded module summary list");
-        }
-
-        Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
-        if (moduleListOptional.isPresent()) {
-            nusModsData.setModuleList(moduleListOptional.get());
-            logger.info("Loaded detailed module list");
-        }
-
-        Optional<Holidays> holidaysOptional = Cache.loadHolidays();
-        if (holidaysOptional.isPresent()) {
-            nusModsData.setHolidays(holidaysOptional.get());
-            logger.info("Loaded holidays");
-        }
-
-        Optional<AcadCalendar> acadCalendarOptional = Cache.loadAcadCalendar();
-        if (acadCalendarOptional.isPresent()) {
-            nusModsData.setAcadCalendar(acadCalendarOptional.get());
-            logger.info("Loaded academic calendar");
-        }
-        return nusModsData;
     }
 
     private void initLogging(Config config) {

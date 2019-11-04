@@ -2,7 +2,9 @@ package seedu.address.model;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.module.AcadCalendar;
 import seedu.address.model.module.AcadYear;
 import seedu.address.model.module.Holidays;
@@ -18,6 +20,7 @@ import seedu.address.websocket.Cache;
  * Contains all the information the app needs from NUSMods such as modules, academic calendar, holidays, etc.
  */
 public class NusModsData {
+    private static final Logger logger = LogsCenter.getLogger(NusModsData.class);
 
     private ModuleSummaryList moduleSummaryList;
     private ModuleList moduleList;
@@ -25,10 +28,41 @@ public class NusModsData {
     private Holidays holidays;
 
     public NusModsData() {
-        this.moduleSummaryList = new ModuleSummaryList();
-        this.moduleList = new ModuleList();
-        this.acadCalendar = new AcadCalendar();
-        this.holidays = new Holidays();
+        Optional<ModuleSummaryList> moduleSummaryListOptional = Cache.loadModuleSummaryList();
+        if (moduleSummaryListOptional.isPresent()) {
+            this.moduleSummaryList = moduleSummaryListOptional.get();
+            logger.info("Loaded module summary list");
+        } else {
+            this.moduleSummaryList = moduleSummaryListOptional.get();
+            logger.warning("Filed to load module summary list, starting with empty list");
+        }
+
+        Optional<ModuleList> moduleListOptional = Cache.loadModuleList();
+        if (moduleListOptional.isPresent()) {
+            this.moduleList = moduleListOptional.get();
+            logger.info("Loaded detailed module list");
+        } else {
+            this.moduleList = new ModuleList();
+            logger.warning("Failed to load detailed module list, starting with empty list");
+        }
+
+        Optional<Holidays> holidaysOptional = Cache.loadHolidays();
+        if (holidaysOptional.isPresent()) {
+            this.holidays = holidaysOptional.get();
+            logger.info("Loaded holidays");
+        } else {
+            this.holidays = new Holidays();
+            logger.warning("Failed to load holidays, starting with empty list");
+        }
+
+        Optional<AcadCalendar> acadCalendarOptional = Cache.loadAcadCalendar();
+        if (acadCalendarOptional.isPresent()) {
+            this.acadCalendar = acadCalendarOptional.get();
+            logger.info("Loaded academic calendar");
+        } else {
+            this.acadCalendar = new AcadCalendar();
+            logger.warning("Failed to load academic calendar, starting with empty list");
+        }
     }
 
     public ModuleSummaryList getModuleSummaryList() {
