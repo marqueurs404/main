@@ -105,6 +105,22 @@ The schedule display is the main component that you will be looking at to look s
 
 image::scheduleDisplay.png[]
 
+==== How to read the schedule view
+
+Unsure of how to read the combined schedules of your friends in TimeBook? Here is a simple example to guide you!
+
+TimeBook ensures that the leftmost column will always start from today's date. Each unnumbered coloured block belongs to
+someone's schedule in the group. For example, the image below highlights all of Charlie's schedule.
+
+image::charlieBusyTimeslot.png[]
+
+Take note of the numbered green boxes you see below!
+
+image::freeTimeslot.png[]
+
+These are the common free time slot that you and your group members share! You can use
+these numbered green boxes to arrange your meetings or share it with your group members to pick.
+
 === Tabs
 
 Tabs will contain your contacts and your groups.
@@ -342,6 +358,7 @@ Examples:
 Deletes the event `Swimming Lessons` from `Bobby` 's schedule.
 ****
 
+// tag::addmod[]
 ==== Add Module to Schedule: `addmod`
 
 Adds an NUS module as an event to a person's schedule in TimeBook.
@@ -355,26 +372,28 @@ Format: `addmod n/NAME m/MODULE_CODE cl/CLASS_1_TYPE:CLASS_1_NUMBER,CLASS_2_TYPE
 
 Examples:
 
-* `addmod n/John m/CS2103T class/G01,T5`
-* `addmod n/John m/CS2103T class/G01,T5 ay/2018/2019`
-* `addmod n/John m/CS2103T class/G01,T5 ay/2019/2020 s/1`
+* `addmod n/John m/CS2103T cl/LEC:G01`: This adds CS2103T lecture G01 to John's schedule.
+* `addmod n/John m/CS3230 cl/LEC:1,TUT:08`: This adds CS3230 lecture 1 and tutorial 08 to John's schedule.
+* `addmod n/John m/CS2100 cl/LEC:1,TUT:01,LAB:08`: This adds CS2100 lecture 1, tutorial 01 and lab 08 to John's schedule.
 
 Step-By-Step:
 
-. Add a module's classes easily by typing `addmod` into the command box and follow the format as shown above, then press btn:[Enter] to execute it.
+. Add a module's classes easily by typing `addmod` into the command box and specifying the appropriate parameters, then press btn:[Enter] to execute it.
 
 image::nusmods/addmod1.PNG[]
 
 . If you manage to successfully add the module and its classes into the person's schedule, you will see the person's schedule appearing with the newly added timeslots:
 
 image::nusmods/addmod2.PNG[]
+// end::addmod[]
 
+// tag::addmods[]
 ==== Add Modules via NUSMods Link: `addmods`
 
 Already have your modules timetable on NUSMods?
 Great, you can easily add your modules timetable into TimeBook with the `addmods` command!
 
-Format: `addmods n/NAME l/NUSMODS_SHARE_LINK`
+Format: `addmods n/NAME link/NUSMODS_SHARE_LINK`
 
 ****
 * Reads the specified `NUSMODS_SHARE_LINK` to get the modules and classes, then adds the classes into the person's schedule.
@@ -384,8 +403,8 @@ Format: `addmods n/NAME l/NUSMODS_SHARE_LINK`
 
 Examples:
 
-* `addmods n/John l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
-* `addmods n/Bob l/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`
+* `addmods n/John link/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`: This will add the modules in the NUSMods link to John's schedule.
+* `addmods n/Bob link/https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17`: This will add the modules in teh NUSMods link to Bob's schedule.
 
 Step-By-Step:
 
@@ -396,6 +415,7 @@ image::nusmods/addmods1.PNG[]
 . If you manage to successfully add all the modules and their respective classes into the person's schedule, you will see the person's schedule appearing with the newly added timeslots:
 
 image::nusmods/addmods2.PNG[]
+// end::addmods[]
 
 === Group Management
 
@@ -549,16 +569,10 @@ Removes `Bobby` from the group `CS2103`
 This feature is currently work in progress!
 
 Want to share your group's schedule with your friends?
-This command exports a visualisation representation of the schedule (timetable) of a group or person(s) to a PNG file! +
+This command exports a visualisation representation of currently showing schedule (timetable) of a group or person(s) to a PNG file! +
 Format:
 
-* `export-vr [n/NAME]` +
-* `export-vr [g/GROUP_NAME]` +
-
-Examples:
-
-* `export-vr g/CS2103T Team project`
-* `export-vr n/John Doe`
+* `export-vr` +
 
 //=== Export ICS: `export-ics`
 //
@@ -594,6 +608,7 @@ TimeBook will also help you to decide where to meet for your project meetings by
 .. Add your group members to your group with `addtogroup` command
 . Find the free common time when you want to meet with `show` command
 . With the free time slot `id` get the details for the closest common location with `popup` command
+. Press `esc` button to close the popup
 
 *Constraints*
 
@@ -608,7 +623,7 @@ The full list of the supported locations is below.
 
 ==== Closest Common Location Popup `popup`
 
-command: `popup g/ [groupname] i/[id]`
+command: `popup g/ GROUP_NAME i/ID`
 
 image::gmaps/SuccessfulPopup.png[SuccessfulPopup]
 
@@ -621,12 +636,12 @@ When the command is executed a popup will appear that shows the all the informat
 
 _Parameters_
 
-. `[groupname]`
+. `GROUP_NAME`
 - Description: This is the name of the Group you want to find the free time for.
 The `groupname` can be found on the
 `groups` tab in the user interface.(Use `switch-tab` if your tab is on persons)
 - Type: `String`
-. `[id]`
+. `ID`
 - Description: This is the `id` of the free time slot of a group.
 You can get this `id` from the user interface when you use `show g/[groupname]` command.
 You can only enter the `id` that is shown on the screen.
@@ -656,6 +671,13 @@ Format:
 Examples:
 
 * `popup g/CS2103T i/2`
+
+==== Close popup `esc`
+
+After you are done with viewing the information on the popup press `esc` button on your keyboard to close the popup and
+and return to the main screen.
+
+Format: `esc` button on keyboard.
 
 ==== Clearing all entries: `clear`
 
@@ -715,15 +737,18 @@ e.g. `show g/CS2030 T2`
 e.g. `export-vr g/TimeBook o/timetable.jpg`
 * *Closest Location* : `closestlocation l/LOCATIONA LOCATIONB ...` +
 e.g. `closestlocation l/LT16 LT15 AS5`
-* *Show Free Time Slot* : `show-freetime g/GROUP_NAME id/SLOT_NUMBER` +
-e.g. `show-freetime g/CS2103T id/2`
+* *Show Free Time Slot* : `popup g/GROUP_NAME i/SLOT_NUMBER` +
+e.g. `popup g/CS2103T i/2`
 * *Help* : `help`
 * *Clear* : `clear`
 * *Exit* : `exit`
 
 == Supported Locations
 
-!=== |Valid Location|Valid Location|Valid Location|Valid Location|Valid Location|Valid Location| |AS4-0116|AS3-0214|AS3-0213|AS3-0303|AS3-0212|AS3-0302|AS1-0303|AS1-0302|AS5-0309|LT9
+!===
+10+|Valid Locations|
+
+|AS4-0116|AS3-0214|AS3-0213|AS3-0303|AS3-0212|AS3-0302|AS1-0303|AS1-0302|AS5-0309|LT9
 
 AS1-0304|AS6-0214|AS5-0205|AS2-0413|AS3-0215|LT12|AS7-0119|AS4-0118|LT11|AS1-0209|
 
