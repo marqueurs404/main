@@ -122,15 +122,10 @@ public class AddNusModCommand extends Command {
 
     @Override
     public boolean equals(Command command) {
-        if (command == null) {
-            return false;
-        } else if (!(command instanceof AddNusModCommand)) {
-            return false;
-        } else if (((AddNusModCommand) command).moduleCode.equals(this.moduleCode)) {
-            return true;
-        } else {
-            return false;
-        }
+        return command == this // short circuit if same object
+                || (command instanceof AddNusModCommand // instanceof handles nulls
+                && name.equals(((AddNusModCommand) command).name)
+                && moduleCode.equals(((AddNusModCommand) command).moduleCode)
+                && lessonTypeNumMap.equals(((AddNusModCommand) command).lessonTypeNumMap));
     }
-
 }

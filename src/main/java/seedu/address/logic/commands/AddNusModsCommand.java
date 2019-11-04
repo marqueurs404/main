@@ -41,7 +41,7 @@ public class AddNusModsCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + PREFIX_NAME + "PERSON_NAME "
             + PREFIX_LINK + "NUSMODS_SHARE_LINK\n"
-            + "Example Link: " + NusModsShareLink.EXAMPLE;
+            + "Example Link: " + NusModsShareLink.VALID_EXAMPLE_STRING;
 
     public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule.";
     public static final String MESSAGE_FAILURE = "Unable to add modules: %s";
@@ -180,6 +180,9 @@ public class AddNusModsCommand extends Command {
 
     @Override
     public boolean equals(Command command) {
-        return false;
+        return command == this // short circuit if same object
+                || (command instanceof AddNusModsCommand // instanceof handles nulls
+                && name.equals(((AddNusModsCommand) command).name)
+                && link.equals(((AddNusModsCommand) command).link));
     }
 }

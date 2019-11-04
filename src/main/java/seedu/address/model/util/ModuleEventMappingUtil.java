@@ -29,8 +29,8 @@ import seedu.address.model.person.schedule.Venue;
  * Add an an NUSMods timetable to a person's schedule.
  */
 public class ModuleEventMappingUtil {
-    public static final String MESSAGE_MISSING_LESSONS = "missing class numbers in input!";
-    public static final String MESSAGE_INVALID_LESSONS = "invalid class number in input!";
+    public static final String MESSAGE_MISSING_LESSONS = "missing class numbers!";
+    public static final String MESSAGE_INVALID_LESSONS = "invalid class number!";
 
     /**
      * Converts a {@code Module} to an {@code Event}.

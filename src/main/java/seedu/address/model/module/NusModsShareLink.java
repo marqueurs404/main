@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,13 +23,13 @@ import seedu.address.websocket.util.UrlUtil;
  */
 public class NusModsShareLink {
 
-    public static final String EXAMPLE = "https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T=LEC:G05&CS3230"
-            + "=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17";
+    public static final String VALID_EXAMPLE_STRING = "https://nusmods.com/timetable/sem-1/share?CS2101=&"
+            + "CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17";
 
     public static final String MESSAGE_CONSTRAINTS = "An NUSMods share link should be of the following format:"
             + "https://nusmods.com/timetable/SEMESTER/share?"
             + "MODULE_CODE_1=[LESSON_TYPE_1:LESSON_NUMBER_1,...][&MODULE_CODE_2=...]\n"
-            + "An example link: " + EXAMPLE + "\n";
+            + "An example link: " + VALID_EXAMPLE_STRING + "\n";
 
     public static final Set<String> SHORT_SEMESTER_NAMES = SemesterNo.getShortSemesterNames();
 
@@ -164,5 +165,27 @@ public class NusModsShareLink {
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof NusModsShareLink)) {
+            return false;
+        }
+        NusModsShareLink link = (NusModsShareLink) other;
+        if (link == this) {
+            return true;
+        } else if (link.value.equals(this.value)
+                && link.semesterNo.equals(this.semesterNo)
+                && link.moduleLessonsMap.equals(this.moduleLessonsMap)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, semesterNo, moduleLessonsMap);
     }
 }

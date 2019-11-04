@@ -22,10 +22,6 @@ import seedu.address.model.NusModsData;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.TimeBook;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.module.AcadCalendar;
-import seedu.address.model.module.Holidays;
-import seedu.address.model.module.ModuleList;
-import seedu.address.model.module.ModuleSummaryList;
 import seedu.address.model.util.SampleTimeBook;
 import seedu.address.storage.JsonTimeBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
@@ -35,7 +31,6 @@ import seedu.address.storage.TimeBookStorage;
 import seedu.address.storage.UserPrefsStorage;
 import seedu.address.ui.Ui;
 import seedu.address.ui.UiManager;
-import seedu.address.websocket.Cache;
 
 /**
  * Runs the application.
