@@ -37,7 +37,7 @@ class AddNusModsCommandParserTest {
     void parse_failure() {
         assertParseFailure(parser,
                 WHITESPACE,
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddNusModCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddNusModsCommand.MESSAGE_USAGE));
 
     }
 }
