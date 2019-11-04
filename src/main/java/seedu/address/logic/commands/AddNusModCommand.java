@@ -42,12 +42,12 @@ public class AddNusModCommand extends Command {
             + "[" + PREFIX_LESSON_TYPE_AND_NUM + "CLASS_TYPE_1:CLASS_NUMBER_1,CLASS_TYPE_2:CLASS_NUMBER_2,]...\n";
 
     public static final String MESSAGE_SUCCESS = "Added module to person's schedule: \n\n";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "Unable to find person";
-    public static final String MESSAGE_MODULE_NOT_FOUND = "Unable to find module";
-    public static final String MESSAGE_EVENTS_CLASH = "Unable to add module - there is a timing clash "
-            + "between the module you're adding and the events in the person's schedule!";
-    public static final String MESSAGE_DUPLICATE_EVENT = "Unable to add module - "
-            + "module already exists in the schedule";
+    public static final String MESSAGE_FAILURE = "Unable to add module: ";
+    public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + "couldn't find person!";
+    public static final String MESSAGE_MODULE_NOT_FOUND = "couldn't find module!";
+    public static final String MESSAGE_EVENTS_CLASH = "there is a timing clash between the module you're adding and"
+            + " the events in the person's schedule!";
+    public static final String MESSAGE_DUPLICATE_EVENT = MESSAGE_FAILURE + "module already exists in the schedule";
 
     private final Name name;
     private final ModuleCode moduleCode;
@@ -63,19 +63,6 @@ public class AddNusModCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-
-        Person person;
-
-        if (name == null) {
-            person = model.getUser();
-        } else {
-            try {
-                person = model.findPerson(name);
-            } catch (PersonNotFoundException pnfe) {
-                return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
-            }
-        }
-
         AcadYear acadYear = model.getAcadYear();
         SemesterNo semesterNo = model.getSemesterNo();
         LocalDate startAcadSemDate = model.getAcadSemStartDate(acadYear, semesterNo);
@@ -84,10 +71,16 @@ public class AddNusModCommand extends Command {
         Module module;
         ModuleId moduleId = new ModuleId(acadYear, moduleCode);
 
+        Person person;
+        try {
+            person = getPerson(name, model);
+        } catch (PersonNotFoundException e) {
+            return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
+        }
+
         try {
             module = model.findModule(moduleId);
-            event = mapModuleToEvent(module, startAcadSemDate, semesterNo,
-                    this.lessonTypeNumMap, holidays);
+            event = mapModuleToEvent(module, startAcadSemDate, semesterNo, this.lessonTypeNumMap, holidays);
         } catch (ModuleNotFoundException e) {
             return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
         } catch (ModuleToEventMappingException e) {
@@ -96,13 +89,13 @@ public class AddNusModCommand extends Command {
 
         try {
             person.addEvent(event);
-        } catch (EventClashException e) {
-            return new CommandResult(MESSAGE_EVENTS_CLASH);
         } catch (DuplicateEventException e) {
             return new CommandResult(MESSAGE_DUPLICATE_EVENT);
+        } catch (EventClashException e) {
+            return new CommandResult(MESSAGE_EVENTS_CLASH);
         }
-        // updates UI
 
+        // updates UI.
         if (name == null) {
             model.updateScheduleWindowDisplay(LocalDateTime.now(), ScheduleWindowDisplayType.PERSON);
             model.updateSidePanelDisplay(SidePanelDisplayType.PERSON);
@@ -112,8 +105,17 @@ public class AddNusModCommand extends Command {
         }
 
         return new CommandResult(MESSAGE_SUCCESS);
-
         //return new CommandResult(MESSAGE_SUCCESS + person.getSchedule());
+    }
+
+    private Person getPerson(Name name, Model model) throws PersonNotFoundException {
+        Person person;
+        if (name == null) {
+            person = model.getUser();
+        } else {
+            person = model.findPerson(name);
+        }
+        return person;
     }
 
     @Override
