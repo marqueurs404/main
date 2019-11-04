@@ -6,8 +6,8 @@ package seedu.address.testutil.moduleutil;
 public class NusModsShareLinkStrings {
     public static final String VALID_LINK_1 = "https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T="
             + "LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17";
-    public static final String VALID_LINK_2 = "https://nusmods.com/timetable/sem-1/share?CS2101=&CS2103T="
-            + "LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17";
+    public static final String VALID_LINK_2 = "https://nusmods.com/timetable/sem-1/share?CFG1002=LEC:11&"
+            + "CS2100=TUT:08,LAB:15,LEC:1&CS2101=&CS2103T=LEC:G05&GEQ1000=TUT:D44&GER1000=TUT:E37";
     //Will automatically remove duplicates due to the use of map in NusModsShareLink.parseLink(), thus valid link.
     public static final String VALID_LINK_DUPLICATE_MODULE_LESSONS = "https://nusmods.com/timetable/sem-1/share?"
             + "CS2103T=LEC:G05&CS2103T=LEC:G05&CS3230=LEC:1,TUT:08&CS3243=TUT:07,LEC:1&GEQ1000=TUT:D17";
