@@ -10,7 +10,6 @@ import static seedu.address.testutil.personutil.TypicalPersonDescriptor.WHITESPA
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.AddNusModCommand;
 import seedu.address.logic.commands.AddNusModsCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.module.NusModsShareLink;
