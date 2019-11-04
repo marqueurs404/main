@@ -44,12 +44,12 @@ public class AddNusModsCommand extends Command {
             + "Example Link: " + NusModsShareLink.EXAMPLE;
 
     public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule.";
-    public static final String MESSAGE_FAILURE = "Unable to add modules: ";
-    public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + "couldn't find person!";
-    public static final String MESSAGE_MODULE_NOT_FOUND = MESSAGE_FAILURE + "couldn't get all module details";
-    public static final String MESSAGE_EVENTS_CLASH = MESSAGE_FAILURE + "there's a timing clash somewhere "
+    public static final String MESSAGE_FAILURE = "Unable to add modules: %s";
+    public static final String MESSAGE_PERSON_NOT_FOUND = "couldn't find person!";
+    public static final String MESSAGE_MODULE_NOT_FOUND = "couldn't get all module details";
+    public static final String MESSAGE_EVENTS_CLASH = "there's a timing clash somewhere "
             + "between the modules you're adding and the person's schedule!";
-    public static final String MESSAGE_DUPLICATE_EVENT = MESSAGE_FAILURE + "module already exists in the schedule";
+    public static final String MESSAGE_DUPLICATE_EVENT = "module already exists in the schedule";
 
     private final Name name;
     private final NusModsShareLink link;
@@ -72,24 +72,24 @@ public class AddNusModsCommand extends Command {
         try {
             person = getPerson(name, model);
         } catch (PersonNotFoundException e) {
-            return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_PERSON_NOT_FOUND));
         }
 
         List<Event> eventsToAdd;
         try {
             eventsToAdd = mapModulesToEvents(model, acadYear, startAcadSemDate, holidays);
         } catch (ModuleNotFoundException e) {
-            return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_MODULE_NOT_FOUND));
         } catch (ModuleToEventMappingException e) {
-            return new CommandResult("Unable to add modules: " + e.getMessage());
+            return new CommandResult(String.format(MESSAGE_FAILURE, e.getMessage()));
         }
 
         try {
             addEventsToPerson(person, eventsToAdd);
         } catch (DuplicateEventException e) {
-            return new CommandResult(MESSAGE_DUPLICATE_EVENT);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_DUPLICATE_EVENT));
         } catch (EventClashException e) {
-            return new CommandResult(MESSAGE_EVENTS_CLASH);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_EVENTS_CLASH));
         }
 
         // updates UI.

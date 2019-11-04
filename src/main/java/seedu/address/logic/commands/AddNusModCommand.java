@@ -42,12 +42,12 @@ public class AddNusModCommand extends Command {
             + "[" + PREFIX_LESSON_TYPE_AND_NUM + "CLASS_TYPE_1:CLASS_NUMBER_1,CLASS_TYPE_2:CLASS_NUMBER_2,]...\n";
 
     public static final String MESSAGE_SUCCESS = "Added module to person's schedule.";
-    public static final String MESSAGE_FAILURE = "Unable to add module: ";
-    public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + "couldn't find person!";
+    public static final String MESSAGE_FAILURE = "Unable to add module: %s";
+    public static final String MESSAGE_PERSON_NOT_FOUND = "couldn't find person!";
     public static final String MESSAGE_MODULE_NOT_FOUND = "couldn't find module!";
     public static final String MESSAGE_EVENTS_CLASH = "there is a timing clash between the module you're adding and"
             + " the events in the person's schedule!";
-    public static final String MESSAGE_DUPLICATE_EVENT = MESSAGE_FAILURE + "module already exists in the schedule";
+    public static final String MESSAGE_DUPLICATE_EVENT = "module already exists in the schedule";
 
     private final Name name;
     private final ModuleCode moduleCode;
@@ -55,6 +55,8 @@ public class AddNusModCommand extends Command {
 
     public AddNusModCommand(Name name, ModuleCode moduleCode,
                             Map<LessonType, LessonNo> lessonTypeNumMap) {
+        requireNonNull(moduleCode);
+        requireNonNull(lessonTypeNumMap);
         this.name = name;
         this.moduleCode = moduleCode;
         this.lessonTypeNumMap = lessonTypeNumMap;
@@ -75,24 +77,24 @@ public class AddNusModCommand extends Command {
         try {
             person = getPerson(name, model);
         } catch (PersonNotFoundException e) {
-            return new CommandResult(MESSAGE_PERSON_NOT_FOUND);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_PERSON_NOT_FOUND));
         }
 
         try {
             module = model.findModule(moduleId);
             event = mapModuleToEvent(module, startAcadSemDate, semesterNo, this.lessonTypeNumMap, holidays);
         } catch (ModuleNotFoundException e) {
-            return new CommandResult(MESSAGE_MODULE_NOT_FOUND);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_MODULE_NOT_FOUND));
         } catch (ModuleToEventMappingException e) {
-            return new CommandResult("Unable to add module: " + e.getMessage());
+            return new CommandResult(String.format(MESSAGE_FAILURE, e.getMessage()));
         }
 
         try {
             person.addEvent(event);
         } catch (DuplicateEventException e) {
-            return new CommandResult(MESSAGE_DUPLICATE_EVENT);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_DUPLICATE_EVENT));
         } catch (EventClashException e) {
-            return new CommandResult(MESSAGE_EVENTS_CLASH);
+            return new CommandResult(String.format(MESSAGE_FAILURE, MESSAGE_EVENTS_CLASH));
         }
 
         // updates UI.
