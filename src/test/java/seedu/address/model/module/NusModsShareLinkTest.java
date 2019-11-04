@@ -96,4 +96,13 @@ class NusModsShareLinkTest {
         assertFalse(NusModsShareLink.isValidUrl(NusModsShareLinkStrings.INVALID_LINK_INVALID_SEMESTER));
         assertFalse(NusModsShareLink.isValidUrl(NusModsShareLinkStrings.INVALID_LINK_INVALID_CLASS_TYPE));
     }
+
+    @Test
+    void equals() throws ParseException {
+        NusModsShareLink link = NusModsShareLink.parseLink(NusModsShareLinkStrings.VALID_LINK_1);
+        NusModsShareLink link2 = NusModsShareLink.parseLink(NusModsShareLinkStrings.VALID_LINK_2);
+        assertTrue(link.equals(link));
+        assertTrue(link.equals(NusModsShareLink.parseLink(NusModsShareLinkStrings.VALID_LINK_1)));
+        assertFalse(link.equals(link2));
+    }
 }
