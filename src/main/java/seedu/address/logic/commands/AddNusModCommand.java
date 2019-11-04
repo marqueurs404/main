@@ -41,7 +41,7 @@ public class AddNusModCommand extends Command {
             + PREFIX_MODULE_CODE + "MODULE_CODE "
             + "[" + PREFIX_LESSON_TYPE_AND_NUM + "CLASS_TYPE_1:CLASS_NUMBER_1,CLASS_TYPE_2:CLASS_NUMBER_2,]...\n";
 
-    public static final String MESSAGE_SUCCESS = "Added module to person's schedule: \n\n";
+    public static final String MESSAGE_SUCCESS = "Added module to person's schedule.";
     public static final String MESSAGE_FAILURE = "Unable to add module: ";
     public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + "couldn't find person!";
     public static final String MESSAGE_MODULE_NOT_FOUND = "couldn't find module!";

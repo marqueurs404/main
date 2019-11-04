@@ -43,7 +43,7 @@ public class AddNusModsCommand extends Command {
             + PREFIX_LINK + "NUSMODS_SHARE_LINK\n"
             + "Example Link: " + NusModsShareLink.EXAMPLE;
 
-    public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule: \n\n";
+    public static final String MESSAGE_SUCCESS = "Added NUS modules to person's schedule.";
     public static final String MESSAGE_FAILURE = "Unable to add modules: ";
     public static final String MESSAGE_PERSON_NOT_FOUND = MESSAGE_FAILURE + "couldn't find person!";
     public static final String MESSAGE_MODULE_NOT_FOUND = MESSAGE_FAILURE + "couldn't get all module details";
