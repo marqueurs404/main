@@ -27,7 +27,7 @@ public class ShowNusModCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + PREFIX_MODULE_CODE + "MODULE_CODE\n";
 
     public static final String MESSAGE_SUCCESS = "Showing module %s on browser!";
-    public static final String MESSAGE_MODULE_NOT_FOUND = "Unable to find module %s.";
+    public static final String MESSAGE_MODULE_NOT_FOUND = "Invalid module %s.";
     public static final String MESSAGE_INTERNAL_ERROR = "Internal error.";
     public static final String MESSAGE_BROWSER_FAILED = "Default browser not found or failed to launch!";
 
