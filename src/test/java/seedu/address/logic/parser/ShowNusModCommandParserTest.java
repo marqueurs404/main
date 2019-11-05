@@ -8,7 +8,6 @@ import static seedu.address.testutil.personutil.TypicalPersonDescriptor.WHITESPA
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.AddNusModCommand;
 import seedu.address.logic.commands.ShowNusModCommand;
 import seedu.address.model.module.ModuleCode;
 
