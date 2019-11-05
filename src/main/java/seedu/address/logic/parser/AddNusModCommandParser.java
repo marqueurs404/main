@@ -33,6 +33,7 @@ public class AddNusModCommandParser implements Parser<AddNusModCommand> {
                         PREFIX_ACAD_YEAR, PREFIX_SEMESTER);
 
         if (!Parser.arePrefixesPresent(argMultimap, PREFIX_MODULE_CODE, PREFIX_LESSON_TYPE_AND_NUM)
+                || Parser.areMultiplePrefixesPresent(argMultimap, PREFIX_MODULE_CODE, PREFIX_LESSON_TYPE_AND_NUM)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddNusModCommand.MESSAGE_USAGE));
         }

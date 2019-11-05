@@ -24,7 +24,9 @@ public class AddNusModsCommandParser implements Parser<AddNusModsCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_LINK);
 
-        if (!Parser.arePrefixesPresent(argMultimap, PREFIX_LINK) || !argMultimap.getPreamble().isEmpty()) {
+        if (!Parser.arePrefixesPresent(argMultimap, PREFIX_LINK)
+                || Parser.areMultiplePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_LINK)
+                || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddNusModsCommand.MESSAGE_USAGE));
         }
 

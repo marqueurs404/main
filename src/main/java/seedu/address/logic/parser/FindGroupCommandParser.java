@@ -17,6 +17,7 @@ public class FindGroupCommandParser implements Parser<FindGroupCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_GROUPNAME);
 
         if (!Parser.arePrefixesPresent(argMultimap, PREFIX_GROUPNAME)
+                || Parser.areMultiplePrefixesPresent(argMultimap, PREFIX_GROUPNAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindGroupCommand.MESSAGE_USAGE));
         }

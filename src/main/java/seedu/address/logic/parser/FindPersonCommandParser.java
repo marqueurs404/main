@@ -17,6 +17,7 @@ public class FindPersonCommandParser implements Parser<FindPersonCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME);
 
         if (!Parser.arePrefixesPresent(argMultimap, PREFIX_NAME)
+                || Parser.areMultiplePrefixesPresent(argMultimap, PREFIX_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindPersonCommand.MESSAGE_USAGE));
         }

@@ -19,7 +19,9 @@ public class ShowNusModCommandParser implements Parser<ShowNusModCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_MODULE_CODE, PREFIX_ACAD_YEAR, PREFIX_SEMESTER);
 
-        if (!Parser.arePrefixesPresent(argMultimap, PREFIX_MODULE_CODE) || !argMultimap.getPreamble().isEmpty()) {
+        if (!Parser.arePrefixesPresent(argMultimap, PREFIX_MODULE_CODE)
+                || Parser.areMultiplePrefixesPresent(argMultimap, PREFIX_MODULE_CODE)
+                || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowNusModCommand.MESSAGE_USAGE));
         }
 
