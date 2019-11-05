@@ -154,6 +154,9 @@ public class ParserUtil {
     public static ModuleCode parseModuleCode(String moduleCode) throws ParseException {
         requireNonNull(moduleCode);
         String trimmedModuleCode = moduleCode.trim();
+        if (!ModuleCode.isValidModuleCode(trimmedModuleCode)) {
+            throw new ParseException(ModuleCode.MESSAGE_CONSTRAINTS);
+        }
         return new ModuleCode(trimmedModuleCode);
     }
 
@@ -186,38 +189,6 @@ public class ParserUtil {
         }
 
         return lessonTypeNoMap;
-    }
-
-    /**
-     * Parses a String semesterNo, and trims the String.
-     *
-     * @param acadYear String to be trimmed
-     * @return Trimmed String
-     * @throws ParseException null
-     */
-    public static AcadYear parseAcadYear(String acadYear) throws ParseException {
-        requireNonNull(acadYear);
-        String trimmedAcadYear = acadYear.trim();
-        return new AcadYear(trimmedAcadYear);
-    }
-
-    /**
-     * Parses a String semesterNo, and trims the String.
-     *
-     * @param semesterNo String to be trimmed
-     * @return Trimmed String
-     * @throws ParseException null
-     */
-    public static SemesterNo parseSemesterNo(String semesterNo) throws ParseException {
-        requireNonNull(semesterNo);
-        String trimmedSemesterNo = semesterNo.trim();
-
-        try {
-            SemesterNo semNo = SemesterNo.findSemesterNo(trimmedSemesterNo);
-            return semNo;
-        } catch (SemesterNoNotFoundException e) {
-            throw new ParseException("Semester number not found!");
-        }
     }
 
     /**
