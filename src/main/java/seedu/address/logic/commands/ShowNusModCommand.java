@@ -46,8 +46,10 @@ public class ShowNusModCommand extends Command {
 
         try {
             module = model.findModule(moduleId);
-            Desktop.getDesktop().browse(new URL(String.format(NUSMODS_URL,
-                    module.getModuleCode())).toURI());
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URL(String.format(NUSMODS_URL,
+                        module.getModuleCode())).toURI());
+            }
             return new CommandResult(String.format(MESSAGE_SUCCESS, module.getModuleCode()));
         } catch (ModuleNotFoundException e) {
             return new CommandResult(String.format(MESSAGE_MODULE_NOT_FOUND, moduleCode));
