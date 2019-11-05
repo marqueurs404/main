@@ -13,22 +13,12 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * This class is used to parse closest location command
  */
 public class ClosestLocationCommandParser implements Parser<ClosestLocationCommand> {
-    /**
-     * This method is used to check the presence of the right prefixes
-     * @param argumentMultimap
-     * @param prefixes
-     * @return
-     */
-    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
-        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
-    }
-
     @Override
     public ClosestLocationCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_LOCATIONS);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_LOCATIONS)
+        if (!Parser.arePrefixesPresent(argMultimap, PREFIX_LOCATIONS)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     ClosestLocationCommand.MESSAGE_USAGE));
