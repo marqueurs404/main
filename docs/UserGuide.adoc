@@ -807,9 +807,11 @@ The green blocks still represent the common free time slots for the entire group
 
 Want to know more information about an NUS module? Use `showmod` to quickly open up the NUSMods page for a specific module on your browser!
 
-Format:
+Format: `showmod m/MODULE_CODE`
 
-* `showmod m/MODULE_CODE`
+****
+* image:./icons/warning.png[]: This command requires internet connection.
+****
 
 Examples:
 
