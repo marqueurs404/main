@@ -25,10 +25,12 @@ Refer to the guide <<SettingUp#, here>>.
 [[Design-Architecture]]
 === Architecture
 
+The *_Architecture Diagram_* given below explains the high-level design of the App:
+
 .Architecture Diagram
 image::ArchitectureDiagram.png[]
 
-The *_Architecture Diagram_* given above explains the high-level design of the App. Given below is a quick overview of each component.
+Given below is a quick overview of each component.
 
 [TIP]
 The `.puml` files used to create diagrams in this document can be found in the link:{repoURL}/docs/diagrams/[diagrams] folder.
@@ -115,16 +117,40 @@ NOTE: The lifeline for `DeleteCommandParser` should end at the destroy marker (X
 [[Design-Model]]
 === Model component
 
-.Structure of the Model Component
-image::ModelClassDiagram.png[]
+The following diagram provides a high-level overview of the Model component:
+
+.High-level structure of the Model Component
+image::model/ModelClassDiagram.png[]
 
 *API* : link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model.java`]
 
 The `Model`,
 
 * stores a `UserPref` object that represents the user's preferences.
-* stores the Address Book data.
-* exposes an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* stores a `TimeBook` object which contains data related to persons, groups and the mappings between them.
+* stores a `ScheduleManager` object which contains data related to stateful UI.
+* stores a `NusModsData` object which gets data related to NUSMods modules from the Api component and transforms them to be used by other components.
+* stores a `GmapsModelManager` object which gets data related to Google Maps from the Api component and transforms them to be used by other components.
+
+The following diagram provides a more detailed look into the `TimeBook` sub-component:
+
+.Structure of TimeBook sub-component
+image::model/TimeBookClassDiagram.png[]
+
+The following diagram provides a more detailed look into the `ScheduleManager` sub-component:
+
+.Structure of ScheduleManager sub-component
+image::model/ScheduleManagerClassDiagram.png[]
+
+The following diagram provides a more detailed look into the `NusModsData` sub-component:
+
+.Structure of NusModsData sub-component
+image::model/NusModsDataClassDiagram.png[]
+
+The following diagram provides a more detailed look into the `Gmaps` sub-component:
+
+.Structure of Gmaps sub-component
+image::model/GmapsModelManagerClassDiagram.png[]
 
 [[Design-Storage]]
 === Storage component
@@ -141,6 +167,8 @@ The `Storage` component,
 
 [[Design-API]]
 === Api component
+
+The following diagram explains the design of the API component:
 
 .Expected structure of API Component in `v2.0`.
 image::api/ApiComponentClassDiagram.png[]
@@ -593,7 +621,7 @@ We preprocess the data collected from NUSMods API so that we can cache the data 
 Notably, the key information that we require for each NUS module is the timetable information. However, there is no available API endpoint which provides the timetable information of all modules at once. Rather, there is only an endpoint which provides the timetable information of one module per query. Thus, we developed a small program in `logic.internal.nusmods.ImportMods`, which is executed prior to the main application itself, to query the timetable info for every module and save the data in the resources folder.
 
 ==== Preprocessing Google Maps API
-//TODO: talk about your internal program to build the DistanceMatrix.json / Places.json
+//TODO: talk about your internal program to build the DistanceMatrix.json / Places.json or just do a reference link to Gmaps section
 
 
 ==== Design Considerations

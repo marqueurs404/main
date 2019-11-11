@@ -34,7 +34,8 @@ This section documents a summary of the major and minor contributions I have mad
 ** Enhancements to existing features:
 *** Wrote tests for features I implemented (https://github.com/AY1920S1-CS2103T-T10-4/main/pull/189[#189])
 ** Documentation:
-*** Added documentation for the Developer Guide and User Guide, for the sections related to NUSMods and External API that I implemented.
+*** Added documentation for the Developer Guide and User Guide, for the sections related to NUSMods and External API that I implemented. (https://github.com/AY1920S1-CS2103T-T10-4/main/pull/135[#135], https://github.com/AY1920S1-CS2103T-T10-4/main/pull/137[#137], https://github.com/AY1920S1-CS2103T-T10-4/main/pull/144[#144], https://github.com/AY1920S1-CS2103T-T10-4/main/pull/172[#172], https://github.com/AY1920S1-CS2103T-T10-4/main/pull/174[#174])
+*** Updated documentation for the Developer Guide for the Design -> Architecture, Design -> Model component and Design -> Api component. (https://github.com/AY1920S1-CS2103T-T10-4/main/pull/278[#278])
 ** Community:
 *** Reported bugs and suggestions for other teams in the class during the practical exam dry run.
 ** Tools:
