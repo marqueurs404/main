@@ -500,31 +500,41 @@ image::gmaps/ClosestLocationSequenceDiagram.png[]
 // tag::nusmods[]
 === Add NUSMods To Schedule
 ==== Implementation
-This feature allows users to add their NUSMods timetable (using the `AddNusModsCommand`) to their TimeBook schedules.
+This feature allows users to add their NUSMods timetable (using the `AddNusModsCommand` or `AddNusModCommand`) to their TimeBook schedules.
 
-The `AddNusModsCommand` can be executed by the user through the CLI with the following syntax `addmods n/NAME link/NUSMODS_SHARE_LINK`. The share link contains semester number, module codes and lesson numbers, which are used for creating and adding events to the person's schedule.
+The `AddNusModsCommand` can be executed by the user through the CLI with the following syntax `addmods n/NAME link/NUSMODS_SHARE_LINK`. The share link contains semester number, module codes, class types and class numbers, which are used for creating and adding events to the person's schedule.
 
-//The following class diagrams shows the structure of `Module` and `Event`:
-//TODO: class diagram for Module and Event
+The `AddNusModCommand` can be executed by the user through the CLI with the following syntax `addmod n/NAME m/MODULE_CODE cl/CLASS_TYPE_1:CLASS_NUMBER_1,CLASS_TYPE_2:CLASS_NUMBER_2,...`. This allows the user to add individual modules but requires the user to manually specify the class type and class numbers.
 
-The following sequence diagram shows what happens when `AddNusModsCommand` is executed:
+Since the `AddNusModsCommand` is less complex than `AddNusModsCommand` as it only adds 1 module at a time and does not require URL validation and parsing, we will walk through the implementation of the latter instead. The following sequence diagram shows what happens when `AddNusModsCommand` is executed:
 
+.Sequence diagram of executing the AddNusModsCommand
 image::nusmods/AddNusModsSequenceDiagram.png[]
 
-. User enters `addmods n/NAME link/https//nusmods.com/...`
-. The name string will be parsed into a `Name` object. The argument string for link will be parsed in `AddNusModsCommandParser` into a `NusModsShareLink`, containing the `SemesterNo`, `ModuleCodes` and `LessonNos`. Both the `Name` and `NusModsShareLink` objects will then be passed into the `AddNusModsCommand` constructor.
-. The `AddNusModsCommand#execute` is then called by the `LogicManager`.
-. In the `AddNusModsCommand#execute` method,
-.. `model#findPerson` is called to find the `Person` with the provided name.
-.. Iterate through the `ModuleCodes`,
+. User enters `addmods n/NAME link/https//nusmods.com/...`. The command string will be passed to `LogicManager` which calls `TimeBookParser` for parsing into an `AddNusModsCommand` object.
+. The `TimeBookParser` delegates the parsing to `AddNusModsCommandParser`. The name parameter will be parsed into a `Name` object, while the link parameter will be passed `NusModsShareLink#parseLink`, which validates and parses the link to create an `NusModsShareLink` object containing the `SemesterNo`, each module's `ModuleCode`, and their corresponding lessons' `LessonType` and `LessonNo`. The `AddNusModsCommandParser` then creates an `AddNusModsCommand`, which takes in the `Name` and `NusModsShareLink` objects, and passes the command back to `LogicManager`.
+. The `AddNusModsCommand#execute` is then called by the `LogicManager`. In the `AddNusModsCommand#execute` method,
+.. `AddNusModsCommand#getPerson` is called to get from the model the `Person` whose schedule will be added with the modules.
+.. `AddNusModsCommand#mapModulesToEvents` is then called to map each module to an event. Each `Module`-`LessonType`-`LessonNo` entry in the `NusModsShareLink` is iterated through and the following is executed,
 ... Call `model#findModule` to get the `Module` with the given module code.
-... Pass the module and selected lesson numbers in the link into `ModuleEventMappingUtil#mapModuleToEvent` to generate an `Event` based on the module. The lesson numbers are used to generate the `Timeslots` for the event.
-.. Iterate through all the events to add,
-... Call `person#addEvent` to add the event to the person's schedule.
-. Return command result and display feedback to user.
+... Pass the `Module` and pairs of `LessonType`-`LessonNo` to `ModuleEventMappingUtil#mapModuleToEvent` to generate an `Event` based on the module and lesson type-number pair. One `Module` is mapped to one `Event`, and each `Lesson` in the module is used to generate multiple `Timeslots` for an event.
+.. The created events will then be iterated through and executed with `person#addEvent` to add the events to the person's schedule.
+. The command result is returned to `LogicManager` and feedback is displayed to user.
+
+The following class diagram shows the `Module` class and its associated classes. The structure follows closely to the data retrieved from NUSMods API with some changes to suit the needs of our application.
+
+.Class diagram of `Module` and associated classes
+image::nusmods/ModuleClassDiagram.png[]
+
+The following class diagram shows the `Event` class and its associated classes relevant in the context of this feature.
+
+.Class diagram of `Event` and associated classes
+image::nusmods/EventClassDiagram.png[align="center", width=75%, scaledwidth=18cm]
+
+
 
 ==== Design Considerations
-
+//TODO: change to table
 ===== Aspect: Ease of executing command as user.
 * **Alternative 1 (current choice):** Entering NUSMods share link
 ** Pros: User can easily get the NUSMods share link of his/her existing NUSMods timetable and copy/paste the link into the command.
@@ -546,23 +556,31 @@ The application requires data from the https://api.nusmods.com/v2/[NUSMods API] 
 
 ==== APIs
 
-We have implemented a `websocket` component to contain the logic of interfacing with external APIs.
+We have implemented an `Api` component to contain the logic of interfacing with external APIs.
 
 The `websocket.NusModsApi` class contains methods for querying different endpoints of the NUSMods API and parsing the query results into `JSONObject` or `JSONArray` objects.
 
 The `websocket.GmapsApi` class contains methods for querying different endpoints of the Google Maps API and parsing the query results into `JSONObject` or `JSONArray` objects.
-//TODO: describe more and provide a class diagram of the internal classes in websocket
+
+The `websocket.Cache` class handles the saving and loading of cached API results in the resources folder.
+
+The `websocket.util` folder contains various utility classes for querying external APIs.
+
+The following class diagram shows the expected internal structure of the API component:
+
+.Expected implementation of API Component in `v2.0` to improve abstraction. Currently there is no `ApiManager` which manages external interactions with other components, other components are accessing the `xxxApi` classes and `Cache` class directly for accessing API data.
+image::api/ApiComponentClassDiagram.png[]
 
 ==== Caching API Results
 
-To support limited connectivity in our application, the results of all API queries are preprocessed and saved into the resources directory. The following activity diagram shows how the caching feature works when external data is required for the execution of a certain command:
+To support limited connectivity in our application, the results of all API queries are preprocessed and saved into the resources directory. This is managed by the `Cache` class. The following activity diagram shows how the caching feature works when external data is required for the execution of a certain command:
 
 image::gmaps/ApiDiagram.png[]
 
 ==== Preprocessing NUSMods API
-The key information that we require for each NUS module is the timetable information. Unfortunately, there is no available endpoint which provides the timetable information of all modules at once - there is only an endpoint which provides the timetable information of one module per query. Thus, we developed a small program in `logic.internal.nusmods.ImportMods`, which can be run prior to the main application itself, to query the timetable info for every module and build a list of modules data containing the timetable information.
+We preprocess the data collected from NUSMods API so that we can cache the data for offline usage and perform some early computation steps (e.g. validation, parsing) to reduce the computation cost during actual use in the application.
 
-//TODO: insert diagram websocket - logic.internal.nusmods class diagram
+Notably, the key information that we require for each NUS module is the timetable information. However, there is no available API endpoint which provides the timetable information of all modules at once. Rather, there is only an endpoint which provides the timetable information of one module per query. Thus, we developed a small program in `logic.internal.nusmods.ImportMods`, which is executed prior to the main application itself, to query the timetable info for every module and save the data in the resources folder.
 
 ==== Preprocessing Google Maps API
 //TODO: talk about your internal program to build the DistanceMatrix.json / Places.json
