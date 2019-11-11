@@ -5,11 +5,9 @@
 
 == PROJECT: TimeBook
 
-'''
-
 == Overview
 
-include::../UserGuide.adoc[tag=introduction]
+include::../UserGuide.adoc[tag=ppp-introduction]
 
 This document summarizes my contributions to the TimeBook project in terms of the code, user guide and developer guide.
 
@@ -59,9 +57,10 @@ include::../UserGuide.adoc[tag=showmod]
 == Contributions to the Developer Guide
 
 |===
-|_Given below are parts in the *Add NUSMods To Schedule* section and the *External APIs* section that I contributed to the Developer Guide as they relate to the code that I have contributed. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|_Given below are the *Add NUSMods To Schedule* section and the *External APIs* section that I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
 include::../DeveloperGuide.adoc[tag=nusmods]
 
-include::../DeveloperGuide.adoc[tag=websocket]
+include::../DeveloperGuide.adoc[tag=websocket-marcus-1]
+include::../DeveloperGuide.adoc[tag=websocket-marcus-2]

@@ -25,6 +25,7 @@ Keep a look out for more cool and exciting features coming soon!
 == Introduction
 
 Thank you for checking out TimeBook!
+// tag::ppp-introduction[]
 TimeBook is a desktop application that is morphed from AddressBook Level 3 (AB3).
 TimeBook is a scheduling application that aims to help busy NUS undergraduates keep track of the schedules of you and your friends.
 It also can find the common free time and venues among you and your friends.
@@ -35,6 +36,7 @@ TimeBook will have the following features:
 . Deconflict different schedules of different people and different groups to find the common free time among them.
 . Integration with NUSmods API to allow users to enter their NUSmods timetable link to add it to their schedule.
 . Integration with Google Maps API to allow the application to evaluate the best venue for the group to meet up during the free time in their schedules.
+// end::ppp-introduction[]
 
 == Understanding this guide
 

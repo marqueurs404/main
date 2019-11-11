@@ -668,7 +668,7 @@ image::nusmods/ModuleClassDiagram.png[]
 The following class diagram shows the `Event` class and its associated classes relevant in the context of this feature.
 
 .Class diagram of `Event` and associated classes
-image::nusmods/EventClassDiagram.png[align="center", width=75%, scaledwidth=18cm]
+image::nusmods/EventClassDiagram.png[align="center", width=75%, pdfwidth=50vw]
 
 
 
@@ -696,6 +696,7 @@ image::nusmods/EventClassDiagram.png[align="center", width=75%, scaledwidth=18cm
 
 
 // tag::websocket[]
+// tag::websocket-marcus-1[]
 === External APIs
 
 The application requires data from the https://api.nusmods.com/v2/[NUSMods API] for the <<Add NUSMods To Schedule, Add NUSMods To Schedule>> feature and data from the https://developers.google.com/maps/documentation[Google Maps API] for the <<Closest Common Location(Micro Service), Closest Common Location>> feature. The following subsections describe the implementation of the <<Design-API,Api component>>:
@@ -716,17 +717,23 @@ The `websocket.util` folder contains various utility classes for querying extern
 
 To support limited connectivity in our application, the results of all API queries are preprocessed and saved into the resources directory. This is managed by the `Cache` class. The following activity diagram shows how the caching feature works when external data is required for the execution of a certain command:
 
-image::gmaps/ApiDiagram.png[]
+.Activity diagram showing decision flow for `loadXXX` methods
+image::gmaps/ApiDiagram.png[width=40%, pdfwidth=40vw]
 
 ==== Preprocessing NUSMods API
 We preprocess the data collected from NUSMods API so that we can cache the data for offline usage and perform some early computation steps (e.g. validation, parsing) to reduce the computation cost during actual use in the application.
 
 Notably, the key information that we require for each NUS module is the timetable information. However, there is no available API endpoint which provides the timetable information of all modules at once. Rather, there is only an endpoint which provides the timetable information of one module per query. Thus, we developed a small program in `logic.internal.nusmods.ImportMods`, which is executed prior to the main application itself, to query the timetable info for every module and save the data in the resources folder.
 
+// end::websocket-marcus-1[]
+
+// tag::websocket-klement[]
 ==== Preprocessing Google Maps API
 //TODO: talk about your internal program to build the DistanceMatrix.json / Places.json or just do a reference link to Gmaps section
 
+// end::websocket-klement[]
 
+// tag::websocket-marcus-2[]
 ==== Design Considerations
 |===
 | Aspect: | Choice | Pros | Cons
@@ -746,7 +753,7 @@ Notably, the key information that we require for each NUS module is the timetabl
 
 4+| The choice of implementation was progressive - it was initially choice 3 for prototyping, then enhanced to choice 2, and finally adapted to choice 1. Choice 1 suits our needs the best as it can achieve complete offline support and avoid handling API keys in production. Additionally, the cons of choice 1 is manageable. However, a mix of choice 1 and 2 will be required moving forward if we intend to support non-NUS locations or multiple academic semesters.
 |===
-
+// end::websocket-marcus-2[]
 // end::websocket[]
 
 == Documentation
